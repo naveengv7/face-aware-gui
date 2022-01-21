@@ -243,7 +243,7 @@ camera_panel.pack()
 
 #camera frame end
 
-
+root.iconphoto(False, PhotoImage(file='icon.png'))
 root.mainloop()
 
 if cap:

@@ -224,7 +224,8 @@ camera_panel.pack()
 
 #camera frame end
 
-
+#root.iconbitmap('/home/baset/Activity/clarkson/gui/final/icon.ico')
+root.iconphoto(False, PhotoImage(file='icon.png'))
 root.mainloop()
 
 if cap:
