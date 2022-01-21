@@ -1,11 +1,6 @@
-# from fileinput import filename
-# from glob import glob
-import imp
 from tkinter import *
 from tkinter import messagebox
-# from turtle import color, left, right
 from PIL import Image, ImageTk
-# from click import command
 import cv2
 import os
 from datetime import datetime
