@@ -4,7 +4,7 @@ import dlib
 import numpy as np
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('shape_files/shape_predictor_68_face_landmarks.dat')
 
 def check_image_quality(image):
     image = cv2.resize(image, (224, 224))
