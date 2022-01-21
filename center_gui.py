@@ -19,6 +19,7 @@ frame_cleared =False
 image_list = []
 original_image_list = []
 subject_directory = None
+capture_count=0
 
 data_directory = "data/"
 
@@ -68,7 +69,7 @@ def click_on_image(img_index):
 
 def scan():
     print("calling")
-    global cap,fps,capture_identifier,camera_panel,image_list,original_image_list
+    global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count
     ret, img = cap.read()
 
     if ret:
@@ -90,6 +91,8 @@ def scan():
         if check_image_quality(check_img):
             image_list.append(img)
             original_image_list.append(orginal_img)
+            capture_count= capture_count + 1
+            message_label.config(text="Look at the camera please, captured: "+str(capture_count),bg="green")
 
         if len(image_list)>5:
             print("image more than 5")
@@ -100,7 +103,7 @@ def scan():
 
 
 def start_camera_capture():
-    global cap,camera_panel
+    global cap,camera_panel,capture_count
 
     if not check_input_field():
         return 0
@@ -110,6 +113,7 @@ def start_camera_capture():
     remove_cameraframe_child()
     
     #clear variable
+    capture_count=0
     image_list.clear()
     original_image_list.clear()
     
@@ -166,6 +170,10 @@ def stop_scan():
         plot_grid_image()
     else:
         print('capture not started')  
+    
+    #clear capture variable
+    capture_count=0
+    image_list.clear()
 
 
 
