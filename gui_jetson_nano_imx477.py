@@ -124,10 +124,11 @@ def start_camera_capture():
         #cap = cv2.VideoCapture(0)
         print(gstreamer_pipeline(flip_method=0))
         cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-        scan() # start the capture loop
+        # scan() # start the capture loop
     else:
         print('capture already started')
-
+    
+    scan()
 
 
 
