@@ -183,7 +183,8 @@ def stop_scan():
     #clear capture variable
     capture_count=0
     image_list.clear()
-    original_image_list.clear()
+    
+    #original_image_list.clear()
 
 
 
