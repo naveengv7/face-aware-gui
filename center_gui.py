@@ -92,7 +92,7 @@ def scan():
             image_list.append(img)
             original_image_list.append(orginal_img)
             capture_count= capture_count + 1
-            message_label.config(text="Look at the camera please, captured: "+str(capture_count)+"out of 6",bg="green")
+            message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 6",bg="green")
 
         if len(image_list)>5:
             print("image more than 5")
