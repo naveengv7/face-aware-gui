@@ -164,8 +164,8 @@ def stop_scan():
     remove_cameraframe_child()
 
     if cap is not None:
-        cap.release()
-        cap = None
+        #cap.release()
+        #cap = None
         print('capture stop') 
         plot_grid_image()
     else:
