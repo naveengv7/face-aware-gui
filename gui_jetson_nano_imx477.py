@@ -153,6 +153,8 @@ def plot_grid_image():
             col=col+1   
 
         i=i+1
+    
+
 
 
 def stop_scan():
@@ -169,8 +171,13 @@ def stop_scan():
         #cap = None
         print('capture stop') 
         plot_grid_image()
+        
     else:
         print('capture not started')  
+
+    #clear variable
+    image_list.clear()
+    original_image_list.clear()
 
 
 
