@@ -13,7 +13,7 @@ for f in os.listdir(dir):
 # only for test
 
 
-CAMERA_PORT = 2
+CAMERA_PORT = 0
 IMAGEWIDTH = 3840
 IMAGEHEIGHT = 2160
 
