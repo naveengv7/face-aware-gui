@@ -13,6 +13,26 @@ for f in os.listdir(dir):
 # only for test
 
 
+CAMERA_PORT = 2
+IMAGEWIDTH = 3840
+IMAGEHEIGHT = 2160
+
+#Propriedades de configuracao da camera
+# 3 = width da camera, 4 = height da camera
+CAMERA_PROP_WIDTH = 3
+CAMERA_PROP_HEIGHT = 4
+
+
+#capture = cv2.VideoCapture()
+#capture.open(1 + cv2.CAP_DSHOW)
+
+#fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
+#capture.set(cv2.CAP_PROP_FOURCC, fourcc)
+#capture.set(cv2.CAP_PROP_FPS, 30)
+#capture.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+#capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
+
+
 cap = None
 fps = 10
 camera_panel = None
@@ -25,6 +45,30 @@ capture_count=0
 
 data_directory = "data/"
 
+
+# Resizes a image and maintains aspect ratio
+def maintain_aspect_ratio_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
+    # Grab the image size and initialize dimensions
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # Return original image if no need to resize
+    if width is None and height is None:
+        return image
+
+    # We are resizing height if width is none
+    if width is None:
+        # Calculate the ratio of the height and construct the dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+    # We are resizing width if height is none
+    else:
+        # Calculate the ratio of the 0idth and construct the dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # Return the resized image
+    return cv2.resize(image, dim, interpolation=inter)
 
 def check_input_field():
     if sub_name_var.get() and sub_id_var.get():
@@ -63,6 +107,8 @@ def click_on_image(img_index):
     image_name = now.strftime("%m_%d_%Y_%H_%M_%S.jpg")
     print("image name saved:",image_name)
     cv2.imwrite(subject_directory+image_name,original_image_list[int(img_index)])
+    #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
+    #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
     messagebox.showinfo("Image Saved", "Thank You, Image Saved")
     remove_cameraframe_child()
 
@@ -123,7 +169,10 @@ def start_camera_capture():
 
 
     if cap is None:
-        cap = cv2.VideoCapture(0)
+        #cap = cv2.VideoCapture(2)
+        cap = cv2.VideoCapture(CAMERA_PORT)
+        cap.set(CAMERA_PROP_WIDTH, IMAGEWIDTH)
+        cap.set(CAMERA_PROP_HEIGHT, IMAGEHEIGHT)
         scan() # start the capture loop
     else:
         print('capture already started')

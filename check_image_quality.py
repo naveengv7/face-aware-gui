@@ -12,6 +12,7 @@ from imutils import face_utils
 import math
 from PIL import Image,ImageStat
 from shapely import geometry
+from numpy.linalg import norm
 
 
 #functions start
@@ -53,7 +54,7 @@ def getAngle(a, b, c):
     return ang
 
 
-from numpy.linalg import norm
+
 def get_brightness(img):
     if len(img.shape) == 3:
         # Colored RGB or BGR (*Do Not* use HSV images with this function)
@@ -230,6 +231,7 @@ def check_image_quality(image):
 
     image  = crop_square(image,224)
     #image = cv2.resize(image, (224, 224))
+    image2 = image.copy()
 
     # image brightness
     brightness = get_brightness(image)

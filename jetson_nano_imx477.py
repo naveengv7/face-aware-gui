@@ -14,6 +14,7 @@ for f in os.listdir(dir):
 # only for test
 
 
+
 cap = None
 fps = 10
 camera_panel = None
