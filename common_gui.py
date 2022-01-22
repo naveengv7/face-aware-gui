@@ -8,7 +8,7 @@ from check_image_quality import check_image_quality
 
 
 cap = None
-fps = 10
+fps = 1
 camera_panel = None
 capture_identifier = None
 frame_cleared =False
