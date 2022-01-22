@@ -14,7 +14,7 @@ for f in os.listdir(dir):
 
 
 cap = None
-fps = 1
+fps = 10
 camera_panel = None
 capture_identifier = None
 frame_cleared =False

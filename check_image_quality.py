@@ -6,8 +6,6 @@ from scipy import rand
 from imutils import face_utils
 from dlib import get_frontal_face_detector,shape_predictor
 import time
-import sys
-import argparse
 import numpy as np
 from scipy.spatial import distance as dist
 from imutils import face_utils
@@ -85,29 +83,29 @@ def crop_square(img, size, interpolation=cv2.INTER_AREA):
 
 
 def face_detector_plot_rect(i):
-  face_area = 0 
-  face_cascade = cv2.CascadeClassifier('face_detector.xml')
-  # Convert into grayscale
-  gray = cv2.cvtColor(i, cv2.COLOR_BGR2GRAY)
-  # Detect faces
-  faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-  # Draw rectangle around the faces
-  for (x, y, w, h) in faces:
-     # cv2.rectangle(i, (x, y), (x+w, y+h), (255, 0, 0), 2)  # Draw the rectange around the face
-      face_area = w*h
+    face_area = 0 
+    face_cascade = cv2.CascadeClassifier('face_detector.xml')
+    # Convert into grayscale
+    gray = cv2.cvtColor(i, cv2.COLOR_BGR2GRAY)
+    # Detect faces
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    # Draw rectangle around the faces
+    for (x, y, w, h) in faces:
+        # cv2.rectangle(i, (x, y), (x+w, y+h), (255, 0, 0), 2)  # Draw the rectange around the face
+        face_area = w*h
 
-  print("Face area",face_area)
+    print("Face area",face_area)
 
-  reso = i.shape
-  total_area = i.shape[0] * i.shape[1] 
-  print("Resolution:", reso[0],'X',reso[1])
-  print("total area: ",total_area)
-  print("Face area percentage: ",face_area*100/total_area)
-  # face area calculation end
+    reso = i.shape
+    total_area = i.shape[0] * i.shape[1] 
+    print("Resolution:", reso[0],'X',reso[1])
+    print("total area: ",total_area)
+    print("Face area percentage: ",face_area*100/total_area)
+    # face area calculation end
 
 def get_area_of_polygon(arr_of_tuple):
-  poly = geometry.Polygon(arr_of_tuple)
-  return poly.area
+    poly = geometry.Polygon(arr_of_tuple)
+    return poly.area
 
 
 def glasses_detector(imag,rect,predictor):
@@ -142,28 +140,40 @@ def glasses_detector(imag,rect,predictor):
         print("No Glass detected")
         return 0
 
-def check_background_color_white(image_path):
-  im = Image.open(image_path)
-  width, height = im.size
-  #Setting the points for cropped image
-  left = 0
-  top = 0
-  right = im.width
-  bottom = im.height-im.height * 97/100 #take only 3% from top
-  
-  # # Cropped image of above dimension
-  # # (It will not change original image)
-  im1 = im.crop((left, top, right, bottom))
 
-  n,rgb = max(im1.getcolors(im1.size[0]*im1.size[1]))
-  print("Background color max",rgb)
+def cv2_to_PIL(imgOpenCV): 
+    return Image.fromarray(cv2.cvtColor(imgOpenCV, cv2.COLOR_BGR2RGB))
 
-  if rgb[0] > 200 and rgb[1] > 200 and rgb[2] > 200:
-    print("Background is White")
-    return 1
-  else:
-    print("Background is Not White")
+
+# required pil image so converted from cv2 first
+def check_background_color_white(cv2_image):
+
+    #im = Image.open(image_path)
+
+    # convert cv2 image to pil
+    im = cv2_to_PIL(cv2_image)
+
+    #Setting the points for cropped image
+    left = 0
+    top = 0
+    right = im.width
+    bottom = im.height-im.height * 97/100 #take only 3% from top
+
+    # # Cropped image of above dimension
+    # # (It will not change original image)
+    im1 = im.crop((left, top, right, bottom))
+
+    n,rgb = max(im1.getcolors(im1.size[0]*im1.size[1]))
+    print("Background color max",rgb)
+
+    if rgb[0] > 200 and rgb[1] > 200 and rgb[2] > 200:
+        print("Background is White")
+        return 1
+    else:
+        print("Background is Not White")
     return 0
+
+
 
 def detect_red_eye(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_COLOR)
@@ -197,6 +207,7 @@ def detect_red_eye(image_path):
             print("No red eye detected")
             return 0
 
+
 def mouth_aspect_ratio(mouth):
 	# compute the euclidean distances between the two sets of
 	# vertical mouth landmarks (x, y)-coordinates
@@ -216,36 +227,40 @@ def mouth_aspect_ratio(mouth):
 
 
 def check_image_quality(image):
-    result = False
 
     image  = crop_square(image,224)
     #image = cv2.resize(image, (224, 224))
-
 
     # image brightness
     brightness = get_brightness(image)
     print("Brightness: ",brightness)
 
-    
-    detector = get_frontal_face_detector()
-    predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
+    #check background
+    is_background_white = check_background_color_white(image)
 
-    (mStart, mEnd) = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
-    (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
-    (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
-    (jStart,jEnd) = face_utils.FACIAL_LANDMARKS_IDXS["jaw"]
-    (reStart,reEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eyebrow"]
-    (leStart,leEnd)= face_utils.FACIAL_LANDMARKS_IDXS["left_eyebrow"]
-    (nStart,nEnd)= face_utils.FACIAL_LANDMARKS_IDXS["nose"]
-
+    #Convert image to graysale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    rects = detector(gray, 0)
-    jaw = None
+
 
     # blur value (laplacian) need gray image
     blur_value = blur_photo_check(gray)
+    
+    
 
+    # shape predictor 
+    detector = get_frontal_face_detector()
+    predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
+    
+    (mStart, mEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
+    (lStart, lEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+    (rStart, rEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+    (jStart,jEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["jaw"]
+    (reStart,reEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eyebrow"]
+    (leStart,leEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eyebrow"]
+    (nStart,nEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["nose"]
 
+    jaw = None
+    rects = detector(gray, 0)
     for rect in rects:
         shape = predictor(gray, rect)
         shape = face_utils.shape_to_np(shape)
@@ -265,21 +280,12 @@ def check_image_quality(image):
         left_eyebrowHull = cv2.convexHull(left_eyebrow)
         mouthHull = cv2.convexHull(mouth)
         
-        cv2.drawContours(image, [leftEyeHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [rightEyeHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [jawHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [right_eyebrowHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [left_eyebrowHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [noseHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
-
 
         cv2.line(image,tuple(jaw[0]),(jaw[16][0],jaw[0][1]), (255,255,0), 2) 
         d_ratio = dist_ratio(jaw,nose)
         print("Jaw to Eye distance Ratio:",d_ratio )
         jaw_angle = getAngle(tuple(jaw[16]),jaw[0], (jaw[16][0],jaw[0][1]))
         print("Face tilt angle: ",jaw_angle)
-
         print("Distance between eyes:",dist.euclidean(shape[39], shape[42]))
         left_eye_distance_ratio = get_dist_ratio(shape[42],shape[45],shape[43],shape[47])
         print("left_eye_width_height_ratio",left_eye_distance_ratio)
@@ -289,18 +295,27 @@ def check_image_quality(image):
         print("mouth_width_height_ratio",mouth_distance_ratio)
         
         #is_glass = glasses_detector(image2,rect,predictor)
-        #is_background_white = check_background_color_white(image_path)
         #is_red_eye_detected = detect_red_eye(image_path)    
 
-        cv2.imwrite('tmp/'+str(random.random())+'.jpg',image)
+        #draw shapes on image
+        cv2.drawContours(image, [leftEyeHull], 0, (255, 255, 255), 1)
+        cv2.drawContours(image, [rightEyeHull], 0, (255, 255, 255), 1)
+        cv2.drawContours(image, [jawHull], 0, (255, 255, 255), 1)
+        cv2.drawContours(image, [right_eyebrowHull], 0, (255, 255, 255), 1)
+        cv2.drawContours(image, [left_eyebrowHull], 0, (255, 255, 255), 1)
+        cv2.drawContours(image, [noseHull], 0, (255, 255, 255), 1)
+        cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
+
+        # temp_image_name = str(random.random())
+        # cv2.imwrite('tmp/'+temp_image_name+'.jpg',image)
+        # print("=========\n")
+        # print("Image Name : ", temp_image_name)
 
         if jaw is None:
+            print("--No face detected")
             return False
-
-
-        #check image blur 
-        if blur_value < 5:
-            print("-- Not acceptable, Image is blurry")
+        elif blur_value < 5: #blur (laplacian) check
+            print("--Not acceptable, Image is blurry")
             return False
         elif left_eye_distance_ratio > 6 or right_eye_distance_ratio > 6:
             print("--Not acceptable, Eye Closed") 
@@ -314,24 +329,26 @@ def check_image_quality(image):
         elif brightness < 45 or brightness > 204:  # Based on histogram value
             print("--Not acceptable, Brightness issue")  
             return False
+        elif is_background_white == 0:
+            print("--Not acceptable, Background Color not white")
+            return False
 
         # elif is_glass == 1:
         #     print("--Not acceptable, Glass detected")
         #     return False
+        
 
-        # elif is_background_white == 0:
-        #     print("--Not acceptable, Background Color not white")
-        #     return False
         # elif is_red_eye_detected == 1:
         #     print("--Not acceptable, Red eye detected")
         #     return False
+
         else :
             print("No issue found, it's a good image")
             return True
 
 
         #return False
-        break
+        #break
 
     
 
