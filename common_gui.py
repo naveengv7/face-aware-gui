@@ -6,6 +6,12 @@ import os
 from datetime import datetime
 from check_image_quality import check_image_quality
 
+#remove all file from tmp
+dir = 'tmp/'
+for f in os.listdir(dir):
+    os.remove(os.path.join(dir, f))
+# only for test
+
 
 cap = None
 fps = 1
@@ -59,8 +65,6 @@ def click_on_image(img_index):
     cv2.imwrite(subject_directory+image_name,original_image_list[int(img_index)])
     messagebox.showinfo("Image Saved", "Thank You, Image Saved")
     remove_cameraframe_child()
-
-
 
 
 def scan():

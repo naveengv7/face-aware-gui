@@ -7,6 +7,12 @@ from datetime import datetime
 from check_image_quality import check_image_quality
 from imx477_example import gstreamer_pipeline
 
+#remove all file from tmp
+dir = 'tmp/'
+for f in os.listdir(dir):
+    os.remove(os.path.join(dir, f))
+# only for test
+
 
 cap = None
 fps = 10

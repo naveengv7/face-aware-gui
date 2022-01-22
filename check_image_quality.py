@@ -215,15 +215,11 @@ def mouth_aspect_ratio(mouth):
 
 
 
-
-
-
-
 def check_image_quality(image):
     result = False
 
-    #image  = crop_square(cv2.imread(input_base_dir+im_name),600)
-    image = cv2.resize(image, (224, 224))
+    image  = crop_square(image,224)
+    #image = cv2.resize(image, (224, 224))
 
 
     # image brightness
