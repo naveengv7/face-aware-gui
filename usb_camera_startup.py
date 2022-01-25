@@ -215,7 +215,7 @@ def stop_scan():
     global cap,camera_panel,capture_identifier,button_click
     message_label.config(text="Fill out the information and click start...")
     
-    button_click = False
+    
 
     #if camera_panel:
     #camera_panel.after_cancel(capture_identifier)
@@ -225,13 +225,17 @@ def stop_scan():
         cap.release()
         cap = None
         print('capture stop') 
-        plot_grid_image()
+        if button_click is True:
+            plot_grid_image()
+            return 1
     else:
         print('capture not started')  
     
     #clear capture variable
     capture_count=0
     image_list.clear()
+    
+    start_camera_capture(False)
 
 
 
