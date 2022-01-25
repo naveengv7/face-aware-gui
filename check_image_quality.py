@@ -85,7 +85,7 @@ def crop_square(img, size, interpolation=cv2.INTER_AREA):
 
 def face_detector_plot_rect(i):
     face_area = 0 
-    face_cascade = cv2.CascadeClassifier('face_detector.xml')
+    face_cascade = cv2.CascadeClassifier('shape_files/face_detector.xml')
     # Convert into grayscale
     gray = cv2.cvtColor(i, cv2.COLOR_BGR2GRAY)
     # Detect faces
@@ -94,6 +94,9 @@ def face_detector_plot_rect(i):
     for (x, y, w, h) in faces:
         # cv2.rectangle(i, (x, y), (x+w, y+h), (255, 0, 0), 2)  # Draw the rectange around the face
         face_area = w*h
+        return True
+    
+    return False
 
     print("Face area",face_area)
 
@@ -308,10 +311,10 @@ def check_image_quality(image):
         cv2.drawContours(image, [noseHull], 0, (255, 255, 255), 1)
         cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
 
-        # temp_image_name = str(random.random())
+        temp_image_name = str(random.random())
         # cv2.imwrite('tmp/'+temp_image_name+'.jpg',image)
-        # print("=========\n")
-        # print("Image Name : ", temp_image_name)
+        print("=========\n")
+        print("Image Name : ", temp_image_name)
 
         if jaw is None:
             print("--No face detected")
@@ -331,9 +334,9 @@ def check_image_quality(image):
         elif brightness < 45 or brightness > 204:  # Based on histogram value
             print("--Not acceptable, Brightness issue")  
             return False
-        elif is_background_white == 0:
-            print("--Not acceptable, Background Color not white")
-            return False
+        # elif is_background_white == 0:
+        #     print("--Not acceptable, Background Color not white")
+        #     return False
 
         # elif is_glass == 1:
         #     print("--Not acceptable, Glass detected")

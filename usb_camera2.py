@@ -1,0 +1,352 @@
+import imp
+from tkinter import *
+from tkinter import messagebox
+from unittest.mock import call
+from PIL import Image, ImageTk
+import cv2
+from collections import deque
+import os,time
+from datetime import datetime
+
+from matplotlib.pyplot import text
+from check_image_quality import check_image_quality,face_detector_plot_rect
+
+#remove all file from tmp
+dir = 'tmp/'
+for f in os.listdir(dir):
+    os.remove(os.path.join(dir, f))
+# only for test
+
+
+CAMERA_PORT = 0
+IMAGEWIDTH = 3840
+IMAGEHEIGHT = 2160
+
+#Propriedades de configuracao da camera
+# 3 = width da camera, 4 = height da camera
+CAMERA_PROP_WIDTH = 3
+CAMERA_PROP_HEIGHT = 4
+
+
+#capture = cv2.VideoCapture()
+#capture.open(1 + cv2.CAP_DSHOW)
+
+#fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
+#capture.set(cv2.CAP_PROP_FOURCC, fourcc)
+#capture.set(cv2.CAP_PROP_FPS, 30)
+#capture.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+#capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
+
+
+cap = None
+fps = 5
+camera_panel = None
+capture_identifier = None
+frame_cleared =False
+subject_directory = None
+capture_count=0
+
+#image_list = deque(maxlen=240)
+#original_image_list = deque(maxlen=240)
+
+image_list = []
+original_image_list = []
+
+data_directory = "data/"
+
+start_timeout=5
+
+count_down_label = None
+t = None
+
+final_image_list = []
+final_original_image_list=[]
+
+start_time = None
+end_time = None
+
+
+
+
+# Resizes a image and maintains aspect ratio
+def maintain_aspect_ratio_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
+    # Grab the image size and initialize dimensions
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # Return original image if no need to resize
+    if width is None and height is None:
+        return image
+
+    # We are resizing height if width is none
+    if width is None:
+        # Calculate the ratio of the height and construct the dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+    # We are resizing width if height is none
+    else:
+        # Calculate the ratio of the 0idth and construct the dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # Return the resized image
+    return cv2.resize(image, dim, interpolation=inter)
+
+def check_input_field():
+    if sub_name_var.get() and sub_id_var.get():
+        return True
+    else : 
+        messagebox.showinfo("Required", "Subject Name and Id Required")
+        return False
+
+#create new folder if not exist
+def create_folder_for_subject():
+    global subject_directory,data_directory
+
+    n =sub_name_var.get()
+    if not os.path.exists(data_directory+n):
+        os.mkdir(data_directory+n)
+
+    subject_directory = data_directory+n+'/'
+
+
+# remove all child in camera frame
+def remove_cameraframe_child():
+    global camera_panel
+
+    print("remove camera frame child")
+    for widgets in camera_frame.winfo_children():
+        print(widgets)
+        widgets.destroy()
+
+    camera_panel=None
+
+
+#def wait_to_process():
+
+
+
+# save image on click image
+def click_on_image(img_index):
+    now = datetime.now() 
+    image_name = now.strftime("%m_%d_%Y_%H_%M_%S.jpg")
+    print("image name saved:",image_name)
+    cv2.imwrite(subject_directory+image_name,original_image_list[int(img_index)])
+    #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
+    #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
+    messagebox.showinfo("Image Saved", "Thank You, Image Saved")
+    remove_cameraframe_child()
+
+
+
+calling_count = 0
+
+def scan():
+    print("calling")
+    
+    global cap,fps,capture_identifier,camera_panel,image_list,count_down_label
+    global original_image_list,capture_count,start_timeout,calling_count
+    ret, img = cap.read()
+
+
+    if ret:
+
+        orginal_img = img.copy()
+        check_img = img.copy()
+
+        #for display and grid
+        img = cv2.cvtColor(check_img, cv2.COLOR_BGR2RGBA)
+        img = Image.fromarray(img)
+        img = img.resize((250,250)) # new width & height
+        img = ImageTk.PhotoImage(image=img)
+        #for display and grid
+
+        #display frame on gui 
+        camera_panel.config(image=img)
+        camera_panel.tkimg = img #
+
+        if face_detector_plot_rect(check_img):
+            print("Face Detected") 
+            image_list.append(img)
+            original_image_list.append(orginal_img)
+        else:
+            print("No Face Detected")
+
+        if start_timeout < 1:
+            stop_scan()
+
+        if camera_panel:
+            capture_identifier = camera_panel.after(fps, scan) # change 25 to other value to adjust FPS
+            calling_count = calling_count + 1
+
+            if calling_count >= fps:
+                calling_count = 0
+                start_timeout = start_timeout - 1
+                message_label.config(text="Look at the camera please, countdown:"+str(start_timeout),bg="green")
+        
+        
+            
+
+
+def start_camera_capture():
+    global cap,camera_panel,capture_count,count_down_label,start_time,end_time,start_timeout
+
+    if not check_input_field():
+        return 0
+
+ 
+    message_label.config(text="Look at the camera please...",bg="green")
+    create_folder_for_subject()
+    remove_cameraframe_child()
+    
+    #clear variable
+    start_timeout = 10
+    capture_count=0
+    image_list.clear()
+    original_image_list.clear()
+    
+    #add new camera panel
+    camera_panel = Label(camera_frame)
+    camera_panel.pack()
+
+
+    if cap is None:
+        #cap = cv2.VideoCapture(2)
+        cap = cv2.VideoCapture(CAMERA_PORT)
+        cap.set(CAMERA_PROP_WIDTH, IMAGEWIDTH)
+        cap.set(CAMERA_PROP_HEIGHT, IMAGEHEIGHT)
+        scan() # start the capture loop
+    else:
+        print('capture already started')
+
+
+
+
+def plot_grid_image():
+
+    message_label.config(text="Select image you want to save...")
+    
+    i=0
+    col=1 # start from column 1
+    row=3 # 3 images in a row
+
+    for img in final_image_list:
+        b1 = Button(camera_frame, text="Final Image",command=lambda m=str(i): click_on_image(m))
+        b1.grid(row=row,column=col)
+        b1.image = img
+        b1['image']=img # garbage collection 
+         
+        if(col==3):   
+            row=row+1 
+            col=1     
+        else:         
+            col=col+1   
+
+        i=i+1
+
+        return 1
+    
+    message_label.config(text="No image varified Please try again (click start)...")
+
+
+def stop_scan():
+
+    global cap,camera_panel,capture_identifier,start_timeout
+    message_label.config(text="Fill out the information and click start...")
+
+    
+    #if camera_panel:
+    #camera_panel.after_cancel(capture_identifier)
+    remove_cameraframe_child()
+
+    c = 0
+    counter = 0
+    for i in original_image_list:
+        j = i.copy()
+        if check_image_quality(j):
+            final_original_image_list.append(i)
+            final_image_list.append(image_list[counter])
+            c = c+1
+        counter = counter+1
+        if c > 5:
+            break
+
+
+    if cap is not None:
+        cap.release()
+        cap = None
+        print('capture stop') 
+        plot_grid_image()
+    else:
+        print('capture not started')  
+    
+    #clear capture variable
+    capture_count=0
+    image_list.clear()
+
+
+
+###########################
+### GUI START
+###########################
+
+root = Tk()
+root.title('CITER FACE QUALITY ASSESMENT')
+root.geometry('1000x600')
+# root.attributes('-fullscreen', True)
+
+#getting screen width and height of display
+width= root.winfo_screenwidth() 
+height= root.winfo_screenheight()
+
+# #setting tkinter window size
+root.geometry("%dx%d" % (width, height))
+
+
+#first frame start
+message_frame = Frame(root)
+message_frame.pack()
+
+message_label=Label(message_frame, text="Fill out the form and click start button to start",font=('Aerial 15 bold'))
+message_label.grid(row=0, column=2,pady=10,sticky="nsew")
+#first frame end
+
+
+#form frame start
+form_frame =Frame(root)
+form_frame.pack(pady=5)
+
+sub_name_var=StringVar()
+sub_id_var=StringVar()
+sub_name_var.set("test_subject")
+sub_id_var.set("1") 
+
+Label(form_frame,text="Subject Name").pack(side=LEFT)
+subject_name = Entry(form_frame,textvariable=sub_name_var).pack(side=LEFT,padx=5)
+Label(form_frame,text="Subject Id").pack(side=LEFT,padx=5)
+subject_id   = Entry(form_frame,textvariable=sub_id_var).pack(side=LEFT,padx=5)
+
+Button(form_frame,text='Stop',command=stop_scan).pack(side=LEFT)
+Button(form_frame,text="Start" ,command=start_camera_capture).pack(side=RIGHT)
+#form frame end
+
+
+# camera frame start 
+camera_frame =Frame(root,bg="gray")
+camera_frame.pack()
+count_down_label = Label(camera_frame,text="Capturing image, please focus on camera").pack(side=LEFT,padx=5)
+
+
+#add new camera panel
+camera_panel = Label(camera_frame)
+camera_panel.pack()
+
+#camera frame end
+
+
+#root.iconbitmap('/home/baset/Activity/clarkson/gui/final/icon.ico')
+root.iconphoto(False, PhotoImage(file='icon.png'))
+root.mainloop()
+
+if cap:
+    cap.release()
