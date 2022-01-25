@@ -171,8 +171,8 @@ def start_camera_capture():
     if cap is None:
         #cap = cv2.VideoCapture(2)
         cap = cv2.VideoCapture(CAMERA_PORT)
-        cap.set(CAMERA_PROP_WIDTH, IMAGEWIDTH)
-        cap.set(CAMERA_PROP_HEIGHT, IMAGEHEIGHT)
+        #cap.set(CAMERA_PROP_WIDTH, IMAGEWIDTH)
+        #cap.set(CAMERA_PROP_HEIGHT, IMAGEHEIGHT)
         scan() # start the capture loop
     else:
         print('capture already started')

@@ -94,9 +94,6 @@ def face_detector_plot_rect(i):
     for (x, y, w, h) in faces:
         # cv2.rectangle(i, (x, y), (x+w, y+h), (255, 0, 0), 2)  # Draw the rectange around the face
         face_area = w*h
-        return True
-    
-    return False
 
     print("Face area",face_area)
 
