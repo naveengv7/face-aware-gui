@@ -227,7 +227,7 @@ def mouth_aspect_ratio(mouth):
 
 
 
-def check_image_quality(image):
+def check_image_quality(image,image_name):
 
     image  = crop_square(image,224)
     #image = cv2.resize(image, (224, 224))
@@ -285,10 +285,10 @@ def check_image_quality(image):
 
         cv2.line(image,tuple(jaw[0]),(jaw[16][0],jaw[0][1]), (255,255,0), 2) 
         d_ratio = dist_ratio(jaw,nose)
-        print("Jaw to Eye distance Ratio:",d_ratio )
+        print("Jaw_to_Eye_distance_Ratio:",d_ratio )
         jaw_angle = getAngle(tuple(jaw[16]),jaw[0], (jaw[16][0],jaw[0][1]))
-        print("Face tilt angle: ",jaw_angle)
-        print("Distance between eyes:",dist.euclidean(shape[39], shape[42]))
+        print("Face_tilt_angle: ",jaw_angle)
+        print("Distance_between_eyes:",dist.euclidean(shape[39], shape[42]))
         left_eye_distance_ratio = get_dist_ratio(shape[42],shape[45],shape[43],shape[47])
         print("left_eye_width_height_ratio",left_eye_distance_ratio)
         right_eye_distance_ratio = get_dist_ratio(shape[36],shape[39],shape[37],shape[41])
@@ -308,10 +308,10 @@ def check_image_quality(image):
         cv2.drawContours(image, [noseHull], 0, (255, 255, 255), 1)
         cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
 
-        temp_image_name = str(random.random())
+        
         # cv2.imwrite('tmp/'+temp_image_name+'.jpg',image)
-        print("=========\n")
-        print("Image Name : ", temp_image_name)
+        print("\n========================")
+        print("Image Name : ", image_name)
 
         if jaw is None:
             print("--No face detected")

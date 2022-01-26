@@ -40,6 +40,7 @@ capture_identifier = None
 frame_cleared =False
 image_list = []
 original_image_list = []
+image_name_list=[]
 subject_directory = None
 capture_count=0
 button_click = False
@@ -104,20 +105,22 @@ def remove_cameraframe_child():
 
 # save image on click image
 def click_on_image(img_index):
-    now = datetime.now() 
-    image_name = now.strftime("%m_%d_%Y_%H_%M_%S.jpg")
-    print("image name saved:",image_name)
-    cv2.imwrite(subject_directory+image_name,original_image_list[int(img_index)])
+    print("image name saved:",image_name_list[int(img_index)])
+    cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
     messagebox.showinfo("Image Saved", "Thank You, Image Saved")
     remove_cameraframe_child()
 
 
+
 def scan():
     print("calling")
     global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count,button_click
     ret, img = cap.read()
+
+    now = datetime.now() 
+    image_name = now.strftime("%m_%d_%Y_%H_%M_%S_%f.jpg")
 
     if ret:
 
@@ -137,10 +140,11 @@ def scan():
 
         if button_click is True:
             start_time = time.monotonic()
-            if check_image_quality(check_img):
+            if check_image_quality(check_img,image_name):
                 print("adding----")
                 image_list.append(img)
                 original_image_list.append(orginal_img)
+                image_name_list.append(image_name)
                 capture_count= capture_count + 1
                 message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 6",bg="green")
             print('##per_image_quality_check_time_seconds: ', time.monotonic() - start_time)
