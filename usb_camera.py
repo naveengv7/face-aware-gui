@@ -211,7 +211,7 @@ def plot_grid_image():
 
 def stop_scan():
 
-    global cap,camera_panel,capture_identifier
+    global cap,camera_panel,capture_identifier,capture_count
     message_label.config(text="Fill out the information and click start...")
     
     #if camera_panel:
