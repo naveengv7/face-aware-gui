@@ -117,7 +117,7 @@ def scan():
     global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count
     ret, img = cap.read()
     now = datetime.now() 
-    image_name = now.strftime("%m_%d_%Y_%H_%M_%S_%f.jpg")
+    image_name = now.strftime("%Y_%m_%d_%H_%M_%S_%f.jpg")
 
     if ret:
 
@@ -196,7 +196,7 @@ def plot_grid_image():
     row=3 # 3 images in a row
 
     for img in image_list:
-        b1 = Button(camera_frame, text="Apple",command=lambda m=str(i): click_on_image(m))
+        b1 = Button(camera_frame, text="select image",command=lambda m=str(i): click_on_image(m))
         b1.grid(row=row,column=col)
         b1.image = img
         b1['image']=img # garbage collection 

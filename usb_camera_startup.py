@@ -120,7 +120,7 @@ def scan():
     ret, img = cap.read()
 
     now = datetime.now() 
-    image_name = now.strftime("%m_%d_%Y_%H_%M_%S_%f.jpg")
+    image_name = now.strftime("%Y_%m_%d_%H_%M_%S_%f.jpg")
 
     if ret:
 
@@ -298,8 +298,8 @@ camera_frame =Frame(root,bg="gray")
 camera_frame.pack()
 
 #add new camera panel
-camera_panel = Label(camera_frame)
-camera_panel.pack()
+#camera_panel = Label(camera_frame)
+#camera_panel.pack()
 
 #camera frame end
 
