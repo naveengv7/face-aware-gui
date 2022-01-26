@@ -2,14 +2,14 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
-import os
+import os,time
 from datetime import datetime
 from check_image_quality import check_image_quality
 
 #remove all file from tmp
-dir = 'tmp/'
-for f in os.listdir(dir):
-    os.remove(os.path.join(dir, f))
+# dir = 'tmp/'
+# for f in os.listdir(dir):
+#     os.remove(os.path.join(dir, f))
 # only for test
 
 
@@ -42,8 +42,9 @@ image_list = []
 original_image_list = []
 subject_directory = None
 capture_count=0
+overall_processing_time = 0
 
-data_directory = "data/"
+data_directory = "./data/"
 
 
 # Resizes a image and maintains aspect ratio
@@ -92,9 +93,8 @@ def create_folder_for_subject():
 def remove_cameraframe_child():
     global camera_panel
 
-    print("remove camera frame child")
+    #print("remove camera frame child")
     for widgets in camera_frame.winfo_children():
-        print(widgets)
         widgets.destroy()
 
     camera_panel=None
@@ -134,11 +134,13 @@ def scan():
         camera_panel.config(image=img)
         camera_panel.tkimg = img #
 
+        start_time = time.monotonic()
         if check_image_quality(check_img):
             image_list.append(img)
             original_image_list.append(orginal_img)
             capture_count= capture_count + 1
             message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 6",bg="green")
+        print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
         if len(image_list)>5:
             print("image more than 5")
@@ -149,7 +151,9 @@ def scan():
 
 
 def start_camera_capture():
-    global cap,camera_panel,capture_count
+    global cap,camera_panel,capture_count,overall_processing_time
+
+    overall_processing_time = time.monotonic()
 
     if not check_input_field():
         return 0
@@ -201,6 +205,8 @@ def plot_grid_image():
             col=col+1   
 
         i=i+1
+
+    print('##overall_process_time_seconds: ', time.monotonic() - overall_processing_time)
 
 
 def stop_scan():

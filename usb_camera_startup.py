@@ -2,14 +2,14 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
-import os
+import os,time
 from datetime import datetime
 from check_image_quality import check_image_quality
 
 #remove all file from tmp
-dir = 'tmp/'
-for f in os.listdir(dir):
-    os.remove(os.path.join(dir, f))
+# dir = 'tmp/'
+# for f in os.listdir(dir):
+#     os.remove(os.path.join(dir, f))
 # only for test
 
 
@@ -43,8 +43,9 @@ original_image_list = []
 subject_directory = None
 capture_count=0
 button_click = False
+overall_processing_time = 0
 
-data_directory = "data/"
+data_directory = "./data/"
 
 
 # Resizes a image and maintains aspect ratio
@@ -93,9 +94,8 @@ def create_folder_for_subject():
 def remove_cameraframe_child():
     global camera_panel
 
-    print("remove camera frame child")
+    #print("remove camera frame child")
     for widgets in camera_frame.winfo_children():
-        print(widgets)
         widgets.destroy()
 
     camera_panel=None
@@ -136,12 +136,14 @@ def scan():
         camera_panel.tkimg = img #
 
         if button_click is True:
+            start_time = time.monotonic()
             if check_image_quality(check_img):
                 print("adding----")
                 image_list.append(img)
                 original_image_list.append(orginal_img)
                 capture_count= capture_count + 1
                 message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 6",bg="green")
+            print('##per_image_quality_check_time_seconds: ', time.monotonic() - start_time)
 
         if len(image_list)>5:
             print("image more than 5")
@@ -152,8 +154,11 @@ def scan():
 
 
 def start_camera_capture(button_clk=False):
-    global cap,camera_panel,capture_count,button_click
+    global cap,camera_panel,capture_count,button_click,overall_processing_time
     button_click = button_clk
+
+    if button_clk is True:
+        overall_processing_time = time.monotonic()
 
     if not check_input_field():
         return 0
@@ -188,7 +193,8 @@ def start_camera_capture(button_clk=False):
 
 
 def plot_grid_image():
-
+    
+    global overall_processing_time
     message_label.config(text="Select image you want to save...")
     
     i=0
@@ -208,15 +214,14 @@ def plot_grid_image():
             col=col+1   
 
         i=i+1
-
+    
+    print('##overall_process_time_seconds: ', time.monotonic() - overall_processing_time)
 
 def stop_scan():
 
     global cap,camera_panel,capture_identifier,button_click
     message_label.config(text="Fill out the information and click start...")
     
-    
-
     #if camera_panel:
     #camera_panel.after_cancel(capture_identifier)
     remove_cameraframe_child()
