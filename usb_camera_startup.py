@@ -113,6 +113,19 @@ def click_on_image(img_index):
     remove_cameraframe_child()
     stop_scan()
 
+def draw_box(image):
+    width,height,depth = image.shape
+
+    start_x = 200
+    start_y = 70
+
+    end_x = 500
+    end_y = 400
+
+    print(start_x,start_y,end_x,end_y)
+
+    color = (255, 0, 0)
+    return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 2)
 
 
 def scan():
@@ -127,6 +140,8 @@ def scan():
 
         orginal_img = img.copy()
         check_img = img.copy()
+
+        img = draw_box(img)
 
         #for display and grid
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)

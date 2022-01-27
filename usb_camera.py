@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk,ImageDraw
 import cv2
 import os,time
 from datetime import datetime
@@ -112,6 +112,32 @@ def click_on_image(img_index):
     remove_cameraframe_child()
 
 
+def draw_box(image):
+    width,height,depth = image.shape
+
+    start_x = 200
+    start_y = 70
+
+    end_x = 500
+    end_y = 400
+
+    print(start_x,start_y,end_x,end_y)
+
+    color = (255, 0, 0)
+    return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 2)
+
+
+
+def draw_box_pil(img):
+    w, h = 150, 150
+    shape = [(40, 40), (w - 10, h - 10)]
+    
+    img = ImageDraw.Draw(img)
+    return img.rectangle(shape, outline ="red")
+    
+    #img1.rectangle(shape, fill ="# ffff33", outline ="red")
+
+
 def scan():
     print("calling")
     global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count
@@ -123,6 +149,8 @@ def scan():
 
         orginal_img = img.copy()
         check_img = img.copy()
+        
+        img = draw_box(img)
 
         #for display and grid
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
@@ -130,6 +158,7 @@ def scan():
         img = img.resize((150,150)) # new width & height
         img = ImageTk.PhotoImage(image=img)
         #for display and grid
+        
 
         #display frame on gui 
         camera_panel.config(image=img)
