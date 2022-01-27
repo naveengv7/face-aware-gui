@@ -129,7 +129,7 @@ def draw_box(image):
     end_y = int(height*5/100) + int(height*55/100)
 
 
-
+    print(width,height)
     print(start_x,start_y,end_x,end_y)
 
     color = (255, 0, 0)
