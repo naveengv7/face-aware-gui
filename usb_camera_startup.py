@@ -114,7 +114,7 @@ def click_on_image(img_index):
     stop_scan()
 
 def draw_box(image):
-    width,height,depth = image.shape
+    height,width,depth = image.shape
 
     # start_x = 200
     # start_y = 70
@@ -123,13 +123,13 @@ def draw_box(image):
     # end_y = 400
 
     start_x = int(width*30/100)
-    start_y = int(height*5/100)
+    start_y = int(height*10/100)
 
-    end_x = int(width*30/100) + int(width*65/100)
-    end_y = int(height*5/100) + int(height*55/100)
+    end_x = int(width*70/100)
+    end_y = int(height*70/100)
 
 
-    print(width,height)
+    print(height,width)
     print(start_x,start_y,end_x,end_y)
 
     color = (255, 0, 0)
