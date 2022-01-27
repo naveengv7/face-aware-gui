@@ -116,11 +116,19 @@ def click_on_image(img_index):
 def draw_box(image):
     width,height,depth = image.shape
 
-    start_x = 200
-    start_y = 70
+    # start_x = 200
+    # start_y = 70
 
-    end_x = 500
-    end_y = 400
+    # end_x = 500
+    # end_y = 400
+
+    start_x = int(width*30/100)
+    start_y = int(height*5/100)
+
+    end_x = int(width*30/100) + int(width*65/100)
+    end_y = int(height*5/100) + int(height*55/100)
+
+
 
     print(start_x,start_y,end_x,end_y)
 
