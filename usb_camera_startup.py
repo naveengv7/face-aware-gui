@@ -111,6 +111,7 @@ def click_on_image(img_index):
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
     messagebox.showinfo("Image Saved", "Thank You, Image Saved")
     remove_cameraframe_child()
+    stop_scan()
 
 
 
@@ -146,10 +147,10 @@ def scan():
                 original_image_list.append(orginal_img)
                 image_name_list.append(image_name)
                 capture_count= capture_count + 1
-                message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 6",bg="green")
+                message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
             print('##per_image_quality_check_time_seconds: ', time.monotonic() - start_time)
 
-        if len(image_list)>5:
+        if len(image_list)>3:
             print("image more than 5")
             stop_scan()
 
@@ -203,7 +204,7 @@ def plot_grid_image():
     
     i=0
     col=1 # start from column 1
-    row=3 # 3 images in a row
+    row=2 # 3 images in a row
 
     for img in image_list:
         b1 = Button(camera_frame, text="Apple",command=lambda m=str(i): click_on_image(m))
@@ -211,7 +212,7 @@ def plot_grid_image():
         b1.image = img
         b1['image']=img # garbage collection 
          
-        if(col==3):   
+        if(col==2):   
             row=row+1 
             col=1     
         else:         
