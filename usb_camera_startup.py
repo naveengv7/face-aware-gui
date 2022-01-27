@@ -123,10 +123,10 @@ def draw_box(image):
     # end_y = 400
 
     start_x = int(width*30/100)
-    start_y = int(height*10/100)
+    start_y = int(height*15/100)
 
     end_x = int(width*70/100)
-    end_y = int(height*70/100)
+    end_y = int(height*80/100)
 
 
     print(height,width)
