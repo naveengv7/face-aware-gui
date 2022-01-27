@@ -149,10 +149,10 @@ def scan():
         orginal_img = img.copy()
         check_img = img.copy()
 
+        img = maintain_aspect_ratio_resize(img,150)
         img = draw_box(img)
 
         #for display and grid
-        img = maintain_aspect_ratio_resize(img,150)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
         img = Image.fromarray(img)
         #img = img.resize((150,150)) # new width & height
