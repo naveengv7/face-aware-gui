@@ -133,7 +133,7 @@ def draw_box(image):
     print(start_x,start_y,end_x,end_y)
 
     color = (255, 0, 0)
-    return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 2)
+    return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 4)
 
 
 def scan():
