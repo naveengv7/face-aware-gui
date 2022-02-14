@@ -331,7 +331,7 @@ camera_frame.pack()
 start_camera_capture(False)
 
 #root.iconbitmap('/home/baset/Activity/clarkson/gui/final/icon.ico')
-root.iconphoto(False, PhotoImage(file='icon.png'))
+root.iconphoto(False, PhotoImage(file='asset/icon.png'))
 root.mainloop()
 
 if cap:
