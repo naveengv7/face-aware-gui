@@ -191,41 +191,61 @@ def check_background_color_white(cv2_image):
         return 0
 
 
+def check_one_eye_red(eye):
+    b = eye[:, :, 0]
+    g = eye[:, :, 1]
+    r = eye[:, :, 2]
+    # Add the green and blue channels.
+    bg = cv2.add(b, g)
+    # Simple red eye detector.
+    mask = (r > 170) &  (r > bg)
+    # Convert the mask to uint8 format.
+    mask = mask.astype(np.uint8)*255
 
-def detect_red_eye(image_path):
+    mask_size = mask.size
+    n_zeros = np.count_nonzero(mask==0)
+
+    if  n_zeros < mask_size :
+        #print("Red Eye detected")
+        return True
+    else:
+        #print("No red eye detected")
+        return False
+
+def detect_red_eye(photo,shape):
     start_time = time.monotonic()
-    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    # Load HAAR cascade
-    eyesCascade = cv2.CascadeClassifier("haarcascade_eye.xml")
-    # Detect eyes
-    eyes = eyesCascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(120, 120))
-    
-    # For every detected eye
-    for (x, y, w, h) in eyes:
-        # Extract eye from the image
-        eye = img[y:y+h, x:x+w]
-        # Split eye image into 3 channels
-        b = eye[:, :, 0]
-        g = eye[:, :, 1]
-        r = eye[:, :, 2]
-        # Add the green and blue channels.
-        bg = cv2.add(b, g)
-        # Simple red eye detector.
-        mask = (r > 170) &  (r > bg)
-        # Convert the mask to uint8 format.
-        mask = mask.astype(np.uint8)*255
-       
-        mask_size = mask.size
-        n_zeros = np.count_nonzero(mask==0)
 
-        if  n_zeros < mask_size :
-            print("Red Eye detected")
-            print('#detect_red_eye_time_seconds:: ', time.monotonic() - start_time)
-            return 1
-        else:
-            print("No red eye detected")
-            print('#cdetect_red_eye_time_seconds:: ', time.monotonic() - start_time)
-            return 0
+    x1=shape.part(36).x 
+    x2=shape.part(39).x 
+    y1=shape.part(37).y 
+    y2=shape.part(40).y
+    lefteye=photo[y1:y2,x1:x2]
+
+    check_left_eye = check_one_eye_red(lefteye)
+
+    #cv2_imshow(lefteye)
+
+    x1=shape.part(42).x 
+    x2=shape.part(45).x #43 46 #44 47 
+    y1=shape.part(43).y 
+    y2=shape.part(46).y 
+    righteye=photo[y1:y2,x1:x2]
+    #righteye=photo[y1-10:y2+10,x1-10:x2+10]
+    #cv2_imshow(righteye)
+
+    check_right_eye = check_one_eye_red(righteye)
+
+    
+    print('#red_eye_detector_check_time_seconds:: ', time.monotonic() - start_time)
+    if check_left_eye == False and check_right_eye == False:
+      print("No Red Eye")
+      return 0
+    else:
+      print("Red eye detected")
+      return 1
+
+
+
 
 
 def mouth_aspect_ratio(mouth):
@@ -248,15 +268,21 @@ def mouth_aspect_ratio(mouth):
 
 
 
+
+
+
 def check_image_quality(image,image_name):
+    # cv2.imwrite('tmp/'+temp_image_name+'.jpg',image)
+    print("\n========================")
+    print("Image Name : ", image_name)
 
     image  = crop_square(image,224)
     #image = cv2.resize(image, (224, 224))
-    #image2 = image.copy()
+    image2 = image.copy()
 
     # image brightness
     brightness = get_brightness(image)
-    print("Brightness: ",brightness)
+    #print("Brightness: ",brightness)
 
     #check background
     is_background_white = check_background_color_white(image)
@@ -271,6 +297,7 @@ def check_image_quality(image,image_name):
     
 
     # shape predictor 
+    start_time = time.monotonic()
     detector = get_frontal_face_detector()
     predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
     
@@ -283,9 +310,11 @@ def check_image_quality(image,image_name):
     (nStart,nEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["nose"]
 
     jaw = None
-    rects = detector(gray, 0)
+    rects = detector(image, 0)
     for rect in rects:
-        shape = predictor(gray, rect)
+        print('#68_landmark_detection_time_seconds:: ', time.monotonic() - start_time)
+        shape = predictor(image, rect)
+        shape1 = shape
         shape = face_utils.shape_to_np(shape)
         leftEye = shape[lStart:lEnd]
         rightEye = shape[rStart:rEnd]
@@ -295,13 +324,14 @@ def check_image_quality(image,image_name):
         nose = shape[nStart:nEnd]
         mouth= shape[mStart:mEnd]
         
-        leftEyeHull = cv2.convexHull(leftEye)
-        rightEyeHull = cv2.convexHull(rightEye)
-        jawHull = cv2.convexHull(jaw)
-        right_eyebrowHull = cv2.convexHull(right_eyebrow)
-        noseHull = cv2.convexHull(nose)
-        left_eyebrowHull = cv2.convexHull(left_eyebrow)
-        mouthHull = cv2.convexHull(mouth)
+        # leftEyeHull = cv2.convexHull(leftEye)
+        # print(leftEyeHull)
+        # rightEyeHull = cv2.convexHull(rightEye)
+        # jawHull = cv2.convexHull(jaw)
+        # right_eyebrowHull = cv2.convexHull(right_eyebrow)
+        # noseHull = cv2.convexHull(nose)
+        # left_eyebrowHull = cv2.convexHull(left_eyebrow)
+        # mouthHull = cv2.convexHull(mouth)
         
 
         cv2.line(image,tuple(jaw[0]),(jaw[16][0],jaw[0][1]), (255,255,0), 2) 
@@ -317,22 +347,21 @@ def check_image_quality(image,image_name):
         mouth_distance_ratio = get_dist_ratio(shape[48],shape[54],shape[51],shape[57])
         print("mouth_width_height_ratio",mouth_distance_ratio)
         
-        #is_glass = glasses_detector(image2,rect,predictor)
-        #is_red_eye_detected = detect_red_eye(image_path)    
+        is_glass = glasses_detector(image2,rect,predictor)
+        is_red_eye_detected = detect_red_eye(image,shape1)   
+ 
 
         #draw shapes on image
-        cv2.drawContours(image, [leftEyeHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [rightEyeHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [jawHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [right_eyebrowHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [left_eyebrowHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [noseHull], 0, (255, 255, 255), 1)
-        cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [leftEyeHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [rightEyeHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [jawHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [right_eyebrowHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [left_eyebrowHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [noseHull], 0, (255, 255, 255), 1)
+        #cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
 
         
-        # cv2.imwrite('tmp/'+temp_image_name+'.jpg',image)
-        print("\n========================")
-        print("Image Name : ", image_name)
+        
 
         if jaw is None:
             print("--No face detected")
@@ -357,14 +386,13 @@ def check_image_quality(image,image_name):
         #     print("--Not acceptable, Background Color not white")
         #     return False
 
-        # elif is_glass == 1:
-        #     print("--Not acceptable, Glass detected")
-        #     return False
+        elif is_glass == 1:
+            print("--Not acceptable, Glass detected")
+            return False
         
-
-        # elif is_red_eye_detected == 1:
-        #     print("--Not acceptable, Red eye detected")
-        #     return False
+        elif is_red_eye_detected == 1:
+            print("--Not acceptable, Red eye detected")
+            return False
 
         else :
             print("No issue found, it's a good image")

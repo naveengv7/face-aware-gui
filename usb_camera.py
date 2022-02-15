@@ -183,7 +183,7 @@ def scan():
             message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
         print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
-        if len(image_list)>0:
+        if len(image_list)>1:
             print("image more than 5")
             stop_scan()
 
