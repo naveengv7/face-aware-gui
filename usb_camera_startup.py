@@ -116,21 +116,12 @@ def click_on_image(img_index):
 def draw_box(image):
     height,width,depth = image.shape
 
-    # start_x = 200
-    # start_y = 70
-
-    # end_x = 500
-    # end_y = 400
 
     start_x = int(width*30/100)
     start_y = int(height*15/100)
 
     end_x = int(width*70/100)
     end_y = int(height*80/100)
-
-
-    #print(height,width)
-    #print(start_x,start_y,end_x,end_y)
 
     color = (255, 0, 0)
     return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 4)
