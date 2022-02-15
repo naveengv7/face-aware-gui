@@ -11,10 +11,11 @@ pip3 install shapely
 #if dlib does not install then use this
 wget http://dlib.net/files/dlib-19.21.tar.bz2
 tar jxvf dlib-19.17.tar.bz2
-cd dlib-19.17/
+cd dlib-19.21/
 mkdir build
 cd build/
-cmake ..
+#cmake ..
+cmake .. -DDLIB_USE_CUDA=1 -DUSE_AVX_INSTRUCTIONS=1
 cmake --build .
 cd ../
 $ sudo python3 setup.py install

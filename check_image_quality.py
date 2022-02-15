@@ -269,9 +269,7 @@ def mouth_aspect_ratio(mouth):
 
 
 
-
-
-def check_image_quality(image,image_name):
+def check_image_quality(image,image_name,detector,predictor):
     # cv2.imwrite('tmp/'+temp_image_name+'.jpg',image)
     print("\n========================")
     print("Image Name : ", image_name)
@@ -298,8 +296,7 @@ def check_image_quality(image,image_name):
 
     # shape predictor 
     start_time = time.monotonic()
-    detector = get_frontal_face_detector()
-    predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
+    
     
     (mStart, mEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
     (lStart, lEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
