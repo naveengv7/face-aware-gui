@@ -252,7 +252,7 @@ def check_image_quality(image,image_name):
 
     image  = crop_square(image,224)
     #image = cv2.resize(image, (224, 224))
-    image2 = image.copy()
+    #image2 = image.copy()
 
     # image brightness
     brightness = get_brightness(image)
@@ -352,6 +352,7 @@ def check_image_quality(image,image_name):
         elif brightness < 45 or brightness > 204:  # Based on histogram value
             print("--Not acceptable, Brightness issue")  
             return False
+
         # elif is_background_white == 0:
         #     print("--Not acceptable, Background Color not white")
         #     return False
