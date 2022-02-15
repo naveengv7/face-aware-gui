@@ -128,8 +128,8 @@ def draw_box(image):
     end_y = int(height*80/100)
 
 
-    print(height,width)
-    print(start_x,start_y,end_x,end_y)
+    #print(height,width)
+    #print(start_x,start_y,end_x,end_y)
 
     color = (255, 0, 0)
     return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 4)
@@ -183,7 +183,7 @@ def scan():
             message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
         print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
-        if len(image_list)>3:
+        if len(image_list)>0:
             print("image more than 5")
             stop_scan()
 

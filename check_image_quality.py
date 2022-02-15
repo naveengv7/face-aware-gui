@@ -18,9 +18,12 @@ from numpy.linalg import norm
 #functions start
 
 def angle_between(p1, p2):
+    start_time = time.monotonic()
     ang1 = np.arctan2(*p1[::-1])
     ang2 = np.arctan2(*p2[::-1])
+    print('#angle_between_time_seconds:: ', time.monotonic() - start_time)
     return np.rad2deg((ang1 - ang2) % (2 * np.pi))
+
 
 def dist_ratio(jaw,nose):
     A = dist.euclidean(jaw[0], nose[0])
@@ -56,21 +59,28 @@ def getAngle(a, b, c):
 
 
 def get_brightness(img):
+    start_time = time.monotonic()
     if len(img.shape) == 3:
         # Colored RGB or BGR (*Do Not* use HSV images with this function)
         # create brightness with euclidean norm
-        return np.average(norm(img, axis=2)) / np.sqrt(3)
+        b = np.average(norm(img, axis=2)) / np.sqrt(3)
+        print('#get_brightness_time_seconds:: ', time.monotonic() - start_time)
+        return b
     else:
         # Grayscale
-        return np.average(img)
+        b = np.average(img)
+        print('#get_brightness_time_seconds:: ', time.monotonic() - start_time)
+        return b
 
 
 #blur check need gray scale image
 def blur_photo_check(grey_img):
+    start_time = time.monotonic()
  # img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-  laplacian_var = cv2.Laplacian(grey_img, cv2.CV_64F).var()
-  print("blur value:",laplacian_var)
-  return laplacian_var
+    laplacian_var = cv2.Laplacian(grey_img, cv2.CV_64F).var()
+    print("blur value:",laplacian_var)
+    print('#blur_photo_check_time_seconds:: ', time.monotonic() - start_time)
+    return laplacian_var
 
   
 def crop_square(img, size, interpolation=cv2.INTER_AREA):
@@ -110,6 +120,7 @@ def get_area_of_polygon(arr_of_tuple):
 
 
 def glasses_detector(imag,rect,predictor):
+    start_time = time.monotonic()
     # glass detection start
     sp = predictor(imag, rect)
     landmarks = np.array([[p.x, p.y] for p in sp.parts()])
@@ -136,9 +147,11 @@ def glasses_detector(imag,rect,predictor):
 
     if 255 in edges_center:
         print("Glass detected")
+        print('#glasses_detector_check_time_seconds:: ', time.monotonic() - start_time)
         return 1
     else:
         print("No Glass detected")
+        print('#glasses_detector_check_time_seconds:: ', time.monotonic() - start_time)
         return 0
 
 
@@ -148,6 +161,7 @@ def cv2_to_PIL(imgOpenCV):
 
 # required pil image so converted from cv2 first
 def check_background_color_white(cv2_image):
+    start_time = time.monotonic()
 
     #im = Image.open(image_path)
 
@@ -169,14 +183,17 @@ def check_background_color_white(cv2_image):
 
     if rgb[0] > 200 and rgb[1] > 200 and rgb[2] > 200:
         print("Background is White")
+        print('#check_background_color_white_time_seconds:: ', time.monotonic() - start_time)
         return 1
     else:
         print("Background is Not White")
-    return 0
+        print('#check_background_color_white_time_seconds:: ', time.monotonic() - start_time)
+        return 0
 
 
 
 def detect_red_eye(image_path):
+    start_time = time.monotonic()
     img = cv2.imread(image_path, cv2.IMREAD_COLOR)
     # Load HAAR cascade
     eyesCascade = cv2.CascadeClassifier("haarcascade_eye.xml")
@@ -203,27 +220,31 @@ def detect_red_eye(image_path):
 
         if  n_zeros < mask_size :
             print("Red Eye detected")
+            print('#detect_red_eye_time_seconds:: ', time.monotonic() - start_time)
             return 1
         else:
             print("No red eye detected")
+            print('#cdetect_red_eye_time_seconds:: ', time.monotonic() - start_time)
             return 0
 
 
 def mouth_aspect_ratio(mouth):
-	# compute the euclidean distances between the two sets of
-	# vertical mouth landmarks (x, y)-coordinates
-	A = dist.euclidean(mouth[2], mouth[10]) # 51, 59
-	B = dist.euclidean(mouth[4], mouth[8]) # 53, 57
+    start_time = time.monotonic()
+    # compute the euclidean distances between the two sets of
+    # vertical mouth landmarks (x, y)-coordinates
+    A = dist.euclidean(mouth[2], mouth[10]) # 51, 59
+    B = dist.euclidean(mouth[4], mouth[8]) # 53, 57
 
-	# compute the euclidean distance between the horizontal
-	# mouth landmark (x, y)-coordinates
-	C = dist.euclidean(mouth[0], mouth[6]) # 49, 55
+    # compute the euclidean distance between the horizontal
+    # mouth landmark (x, y)-coordinates
+    C = dist.euclidean(mouth[0], mouth[6]) # 49, 55
 
-	# compute the mouth aspect ratio
-	mar = (A + B) / (2.0 * C)
+    # compute the mouth aspect ratio
+    mar = (A + B) / (2.0 * C)
 
-	# return the mouth aspect ratio
-	return mar
+    # return the mouth aspect ratio
+    print('#mouth_aspect_ratio_time_seconds:: ', time.monotonic() - start_time)
+    return mar
 
 
 
