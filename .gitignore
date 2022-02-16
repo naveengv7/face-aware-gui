@@ -2,3 +2,4 @@ data/*
 tmp/*
 face-aware
 *.pyc 
+.idea
