@@ -9,7 +9,7 @@ import numpy as np
 from scipy.spatial import distance as dist
 from imutils import face_utils
 import math
-from PIL import Image,ImageStat
+from PIL import Image
 from shapely import geometry
 from numpy.linalg import norm
 
@@ -17,10 +17,10 @@ from numpy.linalg import norm
 #functions start
 
 def angle_between(p1, p2):
-    start_time = time.monotonic()
+    #start_time = time.monotonic()
     ang1 = np.arctan2(*p1[::-1])
     ang2 = np.arctan2(*p2[::-1])
-    print('#angle_between_time_seconds:: ', time.monotonic() - start_time)
+    #print('#angle_between_time_seconds:: ', time.monotonic() - start_time)
     return np.rad2deg((ang1 - ang2) % (2 * np.pi))
 
 
@@ -297,12 +297,12 @@ def check_image_quality(image,image_name,detector,predictor):
     start_time = time.monotonic()
     
     
-    (mStart, mEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
-    (lStart, lEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
-    (rStart, rEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+    #(mStart, mEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
+    #(lStart, lEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+    #(rStart, rEnd)  = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
     (jStart,jEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["jaw"]
-    (reStart,reEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eyebrow"]
-    (leStart,leEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eyebrow"]
+    #(reStart,reEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eyebrow"]
+    #(leStart,leEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eyebrow"]
     (nStart,nEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["nose"]
 
     jaw = None
@@ -312,13 +312,13 @@ def check_image_quality(image,image_name,detector,predictor):
         shape = predictor(image, rect)
         shape1 = shape
         shape = face_utils.shape_to_np(shape)
-        leftEye = shape[lStart:lEnd]
-        rightEye = shape[rStart:rEnd]
+        #leftEye = shape[lStart:lEnd]
+        #rightEye = shape[rStart:rEnd]
         jaw = shape[jStart:jEnd]
-        right_eyebrow = shape[reStart:reEnd]
-        left_eyebrow = shape[leStart:leEnd]
+        #right_eyebrow = shape[reStart:reEnd]
+        #left_eyebrow = shape[leStart:leEnd]
         nose = shape[nStart:nEnd]
-        mouth= shape[mStart:mEnd]
+        #mouth= shape[mStart:mEnd]
         
         # leftEyeHull = cv2.convexHull(leftEye)
         # print(leftEyeHull)
@@ -333,15 +333,27 @@ def check_image_quality(image,image_name,detector,predictor):
         cv2.line(image,tuple(jaw[0]),(jaw[16][0],jaw[0][1]), (255,255,0), 2) 
         d_ratio = dist_ratio(jaw,nose)
         print("Jaw_to_Eye_distance_Ratio:",d_ratio )
+
+        j_time = time.monotonic()
         jaw_angle = getAngle(tuple(jaw[16]),jaw[0], (jaw[16][0],jaw[0][1]))
-        print("Face_tilt_angle: ",jaw_angle)
+        print("jaw_angle_or_face_tilt_angle: ",jaw_angle)
+        print('#jaw_angle_time_seconds:: ', time.monotonic() - j_time)
+        
+        e_time = time.monotonic()
         print("Distance_between_eyes:",dist.euclidean(shape[39], shape[42]))
+        print('#eye_distnace_time_seconds:: ', time.monotonic() - e_time)
+
+        
         left_eye_distance_ratio = get_dist_ratio(shape[42],shape[45],shape[43],shape[47])
         print("left_eye_width_height_ratio",left_eye_distance_ratio)
         right_eye_distance_ratio = get_dist_ratio(shape[36],shape[39],shape[37],shape[41])
         print("right_eye_width_height_ratio",right_eye_distance_ratio)
+
+        m_time = time.monotonic() 
         mouth_distance_ratio = get_dist_ratio(shape[48],shape[54],shape[51],shape[57])
         print("mouth_width_height_ratio",mouth_distance_ratio)
+        print('#mouth_or_eye_distance_ration_time_seconds:: ', time.monotonic() - m_time)
+
         
         is_glass = glasses_detector(image2,rect,predictor)
         is_red_eye_detected = detect_red_eye(image,shape1)   
@@ -357,8 +369,6 @@ def check_image_quality(image,image_name,detector,predictor):
         #cv2.drawContours(image, [mouthHull], 0, (255, 255, 255), 1)
 
         
-        
-
         if jaw is None:
             print("--No face detected")
             return False
