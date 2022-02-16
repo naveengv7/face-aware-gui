@@ -1,10 +1,9 @@
 import random
 import cv2
-from dlib import get_frontal_face_detector,shape_predictor
 import numpy as np
 from scipy import rand
 from imutils import face_utils
-from dlib import get_frontal_face_detector,shape_predictor
+#from dlib import get_frontal_face_detector,shape_predictor
 import time
 import numpy as np
 from scipy.spatial import distance as dist

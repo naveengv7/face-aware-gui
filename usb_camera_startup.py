@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
 import os,time
+from dlib import get_frontal_face_detector,shape_predictor
 from datetime import datetime
 from check_image_quality import check_image_quality
 
@@ -12,6 +13,8 @@ from check_image_quality import check_image_quality
 #     os.remove(os.path.join(dir, f))
 # only for test
 
+detector = get_frontal_face_detector()
+predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
 
 CAMERA_PORT = 0
 IMAGEWIDTH = 3840
@@ -156,7 +159,7 @@ def scan():
 
         if button_click is True:
             start_time = time.monotonic()
-            if check_image_quality(check_img,image_name):
+            if check_image_quality(check_img,image_name,detector,predictor):
                 print("adding----")
                 image_list.append(img)
                 original_image_list.append(orginal_img)
