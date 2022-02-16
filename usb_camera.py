@@ -170,12 +170,17 @@ def scan():
         camera_panel.tkimg = img #
 
         start_time = time.monotonic()
-        if check_image_quality(check_img,image_name,detector,predictor):
+        res,msg = check_image_quality(check_img,image_name,detector,predictor)
+
+        if res is True:
             image_list.append(img)
             original_image_list.append(orginal_img)
             image_name_list.append(image_name)
             capture_count= capture_count + 1
             message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
+        else:
+            message_label.config(text=msg+' '+str(capture_count)+" out of 4",bg="red")
+            
         print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
         if len(image_list)>1:

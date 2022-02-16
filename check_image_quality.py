@@ -371,42 +371,39 @@ def check_image_quality(image,image_name,detector,predictor):
         
         if jaw is None:
             print("--No face detected")
-            return False
+            return False,"No face detected"
         elif blur_value < 5: #blur (laplacian) check
             print("--Not acceptable, Image is blurry")
-            return False
+            return False,"Not acceptable, Image is blurry"
         elif left_eye_distance_ratio > 6 or right_eye_distance_ratio > 6:
             print("--Not acceptable, Eye Closed") 
-            return False
+            return False,"Not acceptable, Eye Closed"
         elif d_ratio > 1.2 or d_ratio < .9:
             print("--Not acceptable, looking away")
-            return False
+            return False,"Not acceptable, looking away"
         elif jaw_angle > 10 or jaw_angle < -10:
             print("--Not acceptable for tilted")
-            return False
+            return False,"Not acceptable for tilted"
         elif brightness < 45 or brightness > 204:  # Based on histogram value
             print("--Not acceptable, Brightness issue")  
-            return False
+            return False,"Not acceptable, Brightness issue"
 
         # elif is_background_white == 0:
         #     print("--Not acceptable, Background Color not white")
-        #     return False
+        #     return False,"Not acceptable, Background Color not white"
 
         elif is_glass == 1:
             print("--Not acceptable, Glass detected")
-            return False
+            return False,"Not acceptable, Glass detected"
         
         elif is_red_eye_detected == 1:
             print("--Not acceptable, Red eye detected")
-            return False
+            return False,"Not acceptable, Red eye detected"
 
         else :
             print("No issue found, it's a good image")
-            return True
+            return True,"No issue found, its a good image"
 
-
-        #return False
-        #break
-
+    return False,"No face detected"
     
 
