@@ -179,7 +179,7 @@ def scan():
             capture_count= capture_count + 1
             message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
         else:
-            message_label.config(text=msg+' '+str(capture_count)+" out of 4",bg="red")
+            message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 4",bg="red")
             
         print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 

@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter.tix import Tree
 from PIL import Image, ImageTk
 import cv2
 import os,time
@@ -47,10 +48,15 @@ image_name_list=[]
 subject_directory = None
 capture_count=0
 button_click = False
+is_streaming = False
 overall_processing_time = 0
+
 
 data_directory = "./data/"
 
+def start_camera():
+    global is_streaming
+    is_streaming = True
 
 # Resizes a image and maintains aspect ratio
 def maintain_aspect_ratio_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
@@ -132,7 +138,7 @@ def draw_box(image):
 
 def scan():
     print("calling")
-    global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count,button_click
+    global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count,button_click,is_streaming
     ret, img = cap.read()
 
     now = datetime.now() 
@@ -150,12 +156,15 @@ def scan():
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
         img = Image.fromarray(img)
         #img = img.resize((150,150)) # new width & height
+
+        
         img = ImageTk.PhotoImage(image=img)
         #for display and grid
 
         #display frame on gui 
-        camera_panel.config(image=img)
-        camera_panel.tkimg = img #
+        if is_streaming is True:
+            camera_panel.config(image=img)
+            camera_panel.tkimg = img #
 
         if button_click is True:
             start_time = time.monotonic()
@@ -168,7 +177,7 @@ def scan():
                 capture_count= capture_count + 1
                 message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
             else:
-                message_label.config(text=msg+' '+str(capture_count)+" out of 4",bg="red")
+                message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 4",bg="red")
                 
             print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
@@ -246,7 +255,7 @@ def plot_grid_image():
 
 def stop_scan():
 
-    global cap,camera_panel,capture_identifier,button_click,capture_count
+    global cap,camera_panel,capture_identifier,button_click,capture_count,is_streaming
     message_label.config(text="Fill out the information and click start...")
     
     #if camera_panel:
@@ -267,7 +276,9 @@ def stop_scan():
     capture_count=0
     image_list.clear()
     
+    is_streaming = False
     start_camera_capture(False)
+    
 
 
 
@@ -312,7 +323,8 @@ Label(form_frame,text="Subject Id").pack(side=LEFT,padx=5)
 subject_id   = Entry(form_frame,textvariable=sub_id_var).pack(side=LEFT,padx=5)
 
 Button(form_frame,text='Stop',command=stop_scan).pack(side=LEFT)
-Button(form_frame,text="Start" ,command=lambda x = True:start_camera_capture(x)).pack(side=RIGHT)
+Button(form_frame,text='Start Camera',command=start_camera).pack(side=LEFT)
+Button(form_frame,text="Start Capture" ,command=lambda x = True:start_camera_capture(x)).pack(side=RIGHT)
 #form frame end
 
 
