@@ -299,16 +299,15 @@ root.geometry("%dx%d" % (width, height))
 
 
 #first frame start
-message_frame = Frame(root)
+message_frame = Frame(root,bg='black')
 message_frame.pack()
 
-message_label=Label(message_frame, text="Fill out the form and click start button to start",font=('Aerial 15 bold'))
+message_label=Label(message_frame,bg="black",fg="white", text="Fill out the form and click start button to start",font=('Aerial 15 bold'))
 message_label.grid(row=0, column=2,pady=10,sticky="nsew")
 #first frame end
 
-
 #form frame start
-form_frame =Frame(root)
+form_frame =Frame(root,bg='black')
 form_frame.pack(pady=5)
 
 sub_name_var=StringVar()
@@ -316,9 +315,9 @@ sub_id_var=StringVar()
 sub_name_var.set("test_subject")
 sub_id_var.set("1") 
 
-Label(form_frame,text="Subject Name").pack(side=LEFT)
+Label(form_frame,text="Subject Name",bg='black',fg='white').pack(side=LEFT)
 subject_name = Entry(form_frame,textvariable=sub_name_var).pack(side=LEFT,padx=5)
-Label(form_frame,text="Subject Id").pack(side=LEFT,padx=5)
+Label(form_frame,text="Subject Id",bg='black',fg='white').pack(side=LEFT,padx=5)
 subject_id   = Entry(form_frame,textvariable=sub_id_var).pack(side=LEFT,padx=5)
 
 Button(form_frame,text='Stop',command=stop_scan).pack(side=LEFT)
