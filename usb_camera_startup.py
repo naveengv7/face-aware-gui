@@ -181,8 +181,8 @@ def scan():
                 
             print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
-        if len(image_list)>1:
-            print("image more than 5")
+        if len(image_list)>3:
+            print("image more than 4")
             stop_scan()
 
         if camera_panel:
@@ -286,15 +286,14 @@ def stop_scan():
 ### GUI START
 ###########################
 
+
 root = Tk()
 root.title('CITER FACE QUALITY ASSESMENT')
-root.geometry('1000x600')
+#root.geometry('900x600')
+root.configure(background="black")
 # root.attributes('-fullscreen', True)
-
-#getting screen width and height of display
 width= root.winfo_screenwidth() 
 height= root.winfo_screenheight()
-
 # #setting tkinter window size
 root.geometry("%dx%d" % (width, height))
 
@@ -337,6 +336,23 @@ camera_frame.pack()
 #camera_panel.pack()
 
 #camera frame end
+
+
+
+frameCnt = 152
+frames = [PhotoImage(file='face1.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
+
+def update(ind):
+    frame = frames[ind]
+    ind += 1
+    if ind == frameCnt:
+        ind = 0
+    label.configure(image=frame)
+    root.after(200, update, ind)
+
+label = Label(root,bg='#000000')
+label.pack()
+root.after(0, update, 0)
 
 start_camera_capture(False)
 

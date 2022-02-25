@@ -3,3 +3,5 @@ tmp/*
 face-aware
 *.pyc 
 .idea
+dist
+build
