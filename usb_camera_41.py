@@ -4,7 +4,7 @@ from PIL import Image, ImageTk,ImageDraw
 import cv2
 import os,time
 from datetime import datetime
-from check_image_quality import check_image_quality
+from check_image_quality_41 import check_image_quality
 from dlib import get_frontal_face_detector,shape_predictor
 
 #remove all file from tmp

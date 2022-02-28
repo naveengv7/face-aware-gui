@@ -308,7 +308,7 @@ def check_image_quality(image,image_name,detector,predictor):
     jaw = None
     rects = detector(image, 0)
     for rect in rects:
-        print('#68_landmark_detection_time_seconds:: ', time.monotonic() - start_time)
+        print('#41_landmark_detection_time_seconds:: ', time.monotonic() - start_time)
         shape = predictor(image, rect)
         shape1 = shape
         shape = face_utils.shape_to_np(shape)
@@ -330,36 +330,36 @@ def check_image_quality(image,image_name,detector,predictor):
         # mouthHull = cv2.convexHull(mouth)
         
 
-        cv2.line(image,tuple(jaw[0]),(jaw[16][0],jaw[0][1]), (255,255,0), 2) 
+        cv2.line(image,tuple(jaw[0]),(jaw[8][0],jaw[0][1]), (255,255,0), 2) 
         d_ratio = dist_ratio(jaw,nose)
         print("Jaw_to_Eye_distance_Ratio:",d_ratio )
 
         j_time = time.monotonic()
-        jaw_angle = getAngle(tuple(jaw[16]),jaw[0], (jaw[16][0],jaw[0][1]))
+        jaw_angle = getAngle(tuple(jaw[8]),jaw[0], (jaw[8][0],jaw[0][1]))
         print("jaw_angle_or_face_tilt_angle: ",jaw_angle)
         print('#jaw_angle_time_seconds:: ', time.monotonic() - j_time)
         
         e_time = time.monotonic()
-        print("Distance_between_eyes:",dist.euclidean(shape[39], shape[42]))
+        print("Distance_between_eyes:",dist.euclidean(shape[24], shape[27]))
         print('#eye_distnace_time_seconds:: ', time.monotonic() - e_time)
 
-        
-        left_eye_distance_ratio = get_dist_ratio(shape[42],shape[45],shape[43],shape[47])
+        left_eye_distance_ratio = get_dist_ratio(shape[27],shape[30],shape[28],shape[32])
         print("left_eye_width_height_ratio",left_eye_distance_ratio)
-        right_eye_distance_ratio = get_dist_ratio(shape[36],shape[39],shape[37],shape[41])
+        right_eye_distance_ratio = get_dist_ratio(shape[21],shape[24],shape[22],shape[26])
         print("right_eye_width_height_ratio",right_eye_distance_ratio)
 
         m_time = time.monotonic() 
-        mouth_distance_ratio = get_dist_ratio(shape[48],shape[54],shape[51],shape[57])
+        mouth_distance_ratio = get_dist_ratio(shape[33],shape[35],shape[34],shape[36])
         print("mouth_width_height_ratio",mouth_distance_ratio)
         print('#mouth_or_eye_distance_ration_time_seconds:: ', time.monotonic() - m_time)
 
-        
-        is_glass = glasses_detector(image2,rect,predictor)
-        is_red_eye_detected = detect_red_eye(image,shape1)   
 
         
-  
+        #is_glass = glasses_detector(image2,rect,predictor)
+        #is_red_eye_detected = detect_red_eye(image,shape1)   
+
+        is_glass = 0
+        is_red_eye_detected = 0 
 
         #draw shapes on image
         #cv2.drawContours(image, [leftEyeHull], 0, (255, 255, 255), 1)
