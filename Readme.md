@@ -6,6 +6,7 @@ sudo apt-get install python3-pil.imagetk
 pip3 install dlib
 pip3 install imutils
 pip3 install shapely
+python3 -m  pip install cryptography
 
 # for jetson nano, python 3.6 
 #if dlib does not install then use this

@@ -388,7 +388,7 @@ def check_image_quality(image,image_name,detector,predictor):
             return False,"Not acceptable for tilted"
         elif brightness < 45 or brightness > 204:  # Based on histogram value
             print("--Not acceptable, Brightness issue")  
-            return False,"Not acceptable, Brightness issue"
+            return False,"Not acceptable, Brightness issue"e
 
         # elif is_background_white == 0:
         #     print("--Not acceptable, Background Color not white")

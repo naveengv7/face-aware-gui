@@ -1,3 +1,4 @@
+import imp
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk,ImageDraw
@@ -6,6 +7,7 @@ import os,time
 from datetime import datetime
 from check_image_quality import check_image_quality
 from dlib import get_frontal_face_detector,shape_predictor
+from encrypt_aes import encrypt,add_metadata
 
 #remove all file from tmp
 # dir = 'tmp/'
@@ -110,6 +112,8 @@ def remove_cameraframe_child():
 def click_on_image(img_index):
     print("image name saved:",image_name_list[int(img_index)])
     cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
+    add_metadata(subject_directory+image_name_list[int(img_index)])
+    encrypt(subject_directory+image_name_list[int(img_index)])
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
     messagebox.showinfo("Image Saved", "Thank You, Image Saved")
