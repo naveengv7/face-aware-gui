@@ -56,7 +56,8 @@ def add_metadata(file_path,image_name):
     userdata = {
         'Name': 'Face aware',
         'Place': 'New York',
-        'time' : image_name
+        'time' : image_name,
+        'latlng':'44.6698,74.9813'
     }
     exif_dict = piexif.load(file_path)
     # insert custom data in usercomment field
