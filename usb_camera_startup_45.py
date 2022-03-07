@@ -95,6 +95,10 @@ def create_folder_for_subject():
     global subject_directory,data_directory
 
     n =sub_name_var.get()
+    
+    if not os.path.exists(data_directory):
+        os.mkdir(data_directory)
+
     if not os.path.exists(data_directory+n):
         os.mkdir(data_directory+n)
 

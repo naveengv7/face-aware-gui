@@ -101,7 +101,9 @@ def create_folder_for_subject():
     subject_directory_before_click = subject_directory+'/before/'
     subject_directory_after_click = subject_directory+'/after/'
 
-    
+    if not os.path.exists(data_directory):
+        os.mkdir(data_directory)
+
     if not os.path.exists(data_directory+n):
         os.mkdir(data_directory+n)
 
