@@ -5,3 +5,4 @@ face-aware
 .idea
 dist
 build
+pilot_data/*
