@@ -112,7 +112,7 @@ def remove_cameraframe_child():
 def click_on_image(img_index):
     print("image name saved:",image_name_list[int(img_index)])
     cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
-    add_metadata(subject_directory+image_name_list[int(img_index)])
+    add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
     encrypt(subject_directory+image_name_list[int(img_index)])
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))

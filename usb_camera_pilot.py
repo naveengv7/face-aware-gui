@@ -53,7 +53,7 @@ is_streaming = False
 overall_processing_time = 0
 
 
-data_directory = "./data/"
+data_directory = "./pilot_data/"
 
 def start_camera():
     global is_streaming

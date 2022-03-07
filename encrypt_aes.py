@@ -52,10 +52,11 @@ def decrypt(file_path):
         dec_file.write(decrypted_data)
 
 
-def add_metadata(file_path):
+def add_metadata(file_path,image_name):
     userdata = {
         'Name': 'Face aware',
-        'Place': 'New York'
+        'Place': 'New York',
+        'time' : image_name
     }
     exif_dict = piexif.load(file_path)
     # insert custom data in usercomment field
