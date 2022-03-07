@@ -39,7 +39,7 @@ CAMERA_PROP_HEIGHT = 4
 
 
 cap = None
-fps = 3
+fps = 10
 camera_panel = None
 capture_identifier = None
 frame_cleared =False

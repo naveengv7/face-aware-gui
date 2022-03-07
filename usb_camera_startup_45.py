@@ -39,7 +39,7 @@ CAMERA_PROP_HEIGHT = 4
 
 
 cap = None
-fps = 3
+fps = 10
 camera_panel = None
 capture_identifier = None
 frame_cleared =False
@@ -95,7 +95,7 @@ def create_folder_for_subject():
     global subject_directory,data_directory
 
     n =sub_name_var.get()
-    
+
     if not os.path.exists(data_directory):
         os.mkdir(data_directory)
 
