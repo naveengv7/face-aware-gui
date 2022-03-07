@@ -48,7 +48,7 @@ original_image_list = []
 image_name_list=[]
 subject_directory = None
 capture_count=0
-button_click = False
+start_capture_button = False
 is_streaming = False
 overall_processing_time = 0
 
@@ -141,7 +141,7 @@ def draw_box(image):
 
 def scan():
     print("calling")
-    global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count,button_click,is_streaming
+    global cap,fps,capture_identifier,camera_panel,image_list,original_image_list,capture_count,start_capture_button,is_streaming
     ret, img = cap.read()
 
     now = datetime.now() 
@@ -169,20 +169,20 @@ def scan():
             camera_panel.config(image=img)
             camera_panel.tkimg = img #
 
-        if button_click is True:
-            start_time = time.monotonic()
-            res,msg = check_image_quality(check_img,image_name,detector,predictor)
+            if start_capture_button is True:
+                start_time = time.monotonic()
+                res,msg = check_image_quality(check_img,image_name,detector,predictor)
 
-            if res is True:
-                image_list.append(img)
-                original_image_list.append(orginal_img)
-                image_name_list.append(image_name)
-                capture_count= capture_count + 1
-                message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
-            else:
-                message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 4",bg="red")
-                
-            print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
+                if res is True:
+                    image_list.append(img)
+                    original_image_list.append(orginal_img)
+                    image_name_list.append(image_name)
+                    capture_count= capture_count + 1
+                    message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
+                else:
+                    message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 4",bg="red")
+                    
+                print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
         if len(image_list)>3:
             print("image more than 4")
@@ -193,8 +193,8 @@ def scan():
 
 
 def start_camera_capture(button_clk=False):
-    global cap,camera_panel,capture_count,button_click,overall_processing_time
-    button_click = button_clk
+    global cap,camera_panel,capture_count,start_capture_button,overall_processing_time
+    start_capture_button = button_clk
 
     if button_clk is True:
         overall_processing_time = time.monotonic()
@@ -258,7 +258,7 @@ def plot_grid_image():
 
 def stop_scan():
 
-    global cap,camera_panel,capture_identifier,button_click,capture_count,is_streaming
+    global cap,camera_panel,capture_identifier,start_capture_button,capture_count,is_streaming
     message_label.config(text="Fill out the information and click start...")
     
     #if camera_panel:
@@ -269,7 +269,7 @@ def stop_scan():
         cap.release()
         cap = None
         print('capture stop') 
-        if button_click is True:
+        if start_capture_button is True:
             plot_grid_image()
             return 1
     else:
