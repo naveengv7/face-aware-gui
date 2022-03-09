@@ -57,6 +57,7 @@ data_directory = "./data/"
 
 def start_camera():
     global is_streaming
+    create_folder_for_subject()
     is_streaming = True
 
 # Resizes a image and maintains aspect ratio
@@ -93,6 +94,9 @@ def check_input_field():
 #create new folder if not exist
 def create_folder_for_subject():
     global subject_directory,data_directory
+
+    if check_input_field() is False:
+        return False
 
     n =sub_name_var.get()
 
@@ -319,8 +323,8 @@ form_frame.pack(pady=5)
 
 sub_name_var=StringVar()
 sub_id_var=StringVar()
-sub_name_var.set("test_subject")
-sub_id_var.set("1") 
+#sub_name_var.set("test_subject")
+#sub_id_var.set("1") 
 
 Label(form_frame,text="Subject Name",bg='black',fg='white').pack(side=LEFT)
 subject_name = Entry(form_frame,textvariable=sub_name_var).pack(side=LEFT,padx=5)
