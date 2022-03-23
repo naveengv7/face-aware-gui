@@ -349,7 +349,8 @@ camera_frame.pack()
 
 
 frameCnt = 152
-frames = [PhotoImage(file='face1.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
+#frames = [PhotoImage(file='face1.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
+frames = []
 
 def update(ind):
     frame = frames[ind]
@@ -361,7 +362,7 @@ def update(ind):
 
 label = Label(root,bg='#000000')
 label.pack()
-root.after(0, update, 0)
+#root.after(0, update, 0)
 
 start_camera_capture(False)
 
