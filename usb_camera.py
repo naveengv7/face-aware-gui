@@ -1,11 +1,10 @@
-import imp
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk,ImageDraw
 import cv2
 import os,time
 from datetime import datetime
-from check_image_quality import check_image_quality
+from check_image_quality import check_image_quality,crop_and_save_image
 from dlib import get_frontal_face_detector,shape_predictor
 from encrypt_aes import encrypt,add_metadata
 
@@ -114,7 +113,10 @@ def remove_cameraframe_child():
 # save image on click image
 def click_on_image(img_index):
     print("image name saved:",image_name_list[int(img_index)])
-    cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
+
+    crop_and_save_image(original_image_list[int(img_index)],subject_directory+image_name_list[int(img_index)],detector,predictor)
+
+    #cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
     add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
     encrypt(subject_directory+image_name_list[int(img_index)])
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)

@@ -82,14 +82,7 @@ def blur_photo_check(grey_img):
     return laplacian_var
 
   
-def crop_square(img, size, interpolation=cv2.INTER_AREA):
-    h, w = img.shape[:2]
-    min_size = np.amin([h,w])
 
-    # Centralize and crop
-    crop_img = img[int(h/2-min_size/2):int(h/2+min_size/2), int(w/2-min_size/2):int(w/2+min_size/2)]
-    resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
-    return resized
 
 
 def face_detector_plot_rect(i):
@@ -265,6 +258,65 @@ def mouth_aspect_ratio(mouth):
     print('#mouth_aspect_ratio_time_seconds:: ', time.monotonic() - start_time)
     return mar
 
+def is_nose_is_in_middle(img,x,y):
+    h, w = img.shape[:2]
+    x_percent = x*100/w
+    y_percent = y*100/h
+
+    print("Nose position in percent %",x_percent,y_percent)
+    if (x_percent > 45 and x_percent < 55) and (y_percent > 32 and y_percent < 40):
+        return True
+    else:
+        return False
+
+def crop_square(img, size, interpolation=cv2.INTER_AREA):
+    h, w = img.shape[:2]
+    min_size = np.amin([h,w])
+
+    # Centralize and crop
+    crop_img = img[int(h/2-min_size/2):int(h/2+min_size/2), int(w/2-min_size/2):int(w/2+min_size/2)]
+    resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
+    return resized
+
+def crop_square_by_nose(img, size,x,y, interpolation=cv2.INTER_AREA):
+    h, w = img.shape[:2]
+
+    h=w/2
+    w=w/2
+
+    up= int(.35*h)
+    down = int(.65*h)
+
+    left = int(w/2)
+    right = int(w/2)
+    
+    crop_img = img[int(y-up):int(y+down), int(x-left):int(x+right)]
+
+    return crop_img
+
+
+def crop_and_save_image(image,image_name,detector,predictor):
+
+    (jStart,jEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["jaw"]
+    (nStart,nEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["nose"]
+
+    jaw = None
+    rects = detector(image, 0)
+    for rect in rects:
+        shape = predictor(image, rect)
+        shape = face_utils.shape_to_np(shape)
+
+        jaw = shape[jStart:jEnd]
+        nose = shape[nStart:nEnd]
+
+        print("nose position",nose[0][0],nose[0][1])
+        x = nose[0][0]
+        y = nose[0][1]
+
+        crop_imag = crop_square_by_nose(image,1200,x,y)
+        cv2.imwrite(image_name,crop_imag)
+        
+
 
 
 
@@ -319,6 +371,13 @@ def check_image_quality(image,image_name,detector,predictor):
         #left_eyebrow = shape[leStart:leEnd]
         nose = shape[nStart:nEnd]
         #mouth= shape[mStart:mEnd]
+        print("nose position",nose[0][0],nose[0][1])
+        x = nose[0][0]
+        y = nose[0][1]
+
+        nose_position = is_nose_is_in_middle(image,x,y)
+
+
         
         # leftEyeHull = cv2.convexHull(leftEye)
         # print(leftEyeHull)
@@ -374,6 +433,9 @@ def check_image_quality(image,image_name,detector,predictor):
         if jaw is None:
             print("--No face detected")
             return False,"No face detected"
+        elif nose_position is False: 
+            print("--Not acceptable, Not in center")
+            return False,"Not acceptable, Not in center"
         elif blur_value < 5: #blur (laplacian) check
             print("--Not acceptable, Image is blurry")
             return False,"Not acceptable, Image is blurry"
