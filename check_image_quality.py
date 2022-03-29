@@ -281,8 +281,8 @@ def crop_square(img, size, interpolation=cv2.INTER_AREA):
 def crop_square_by_nose(img, size,x,y, interpolation=cv2.INTER_AREA):
     h, w = img.shape[:2]
 
-    h=w/2
-    w=w/2
+    #h=w/2
+    #w=w/2
 
     up= int(.35*h)
     down = int(.65*h)
@@ -331,7 +331,7 @@ def check_image_quality(image,image_name,detector,predictor):
 
     # image brightness
     brightness = get_brightness(image)
-    #print("Brightness: ",brightness)
+    print("Brightness: ",brightness)
 
     #check background
     is_background_white = check_background_color_white(image)
@@ -414,7 +414,8 @@ def check_image_quality(image,image_name,detector,predictor):
         print('#mouth_or_eye_distance_ration_time_seconds:: ', time.monotonic() - m_time)
 
         
-        is_glass = glasses_detector(image2,rect,predictor)
+        #is_glass = glasses_detector(image2,rect,predictor)
+        is_glass = 0
         is_red_eye_detected = detect_red_eye(image,shape1)   
 
         

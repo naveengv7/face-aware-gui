@@ -277,7 +277,7 @@ def check_image_quality(image,image_name,detector,predictor):
 
     # image brightness
     brightness = get_brightness(image)
-    #print("Brightness: ",brightness)
+    print("Brightness: ",brightness)
 
     #check background
     is_background_white = check_background_color_white(image)

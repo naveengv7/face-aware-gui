@@ -22,20 +22,8 @@ CAMERA_PORT = 0
 IMAGEWIDTH = 3840
 IMAGEHEIGHT = 2160
 
-#Propriedades de configuracao da camera
-# 3 = width da camera, 4 = height da camera
 CAMERA_PROP_WIDTH = 3
 CAMERA_PROP_HEIGHT = 4
-
-
-#capture = cv2.VideoCapture()
-#capture.open(1 + cv2.CAP_DSHOW)
-
-#fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
-#capture.set(cv2.CAP_PROP_FOURCC, fourcc)
-#capture.set(cv2.CAP_PROP_FPS, 30)
-#capture.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
-#capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
 
 
 cap = None
@@ -54,6 +42,9 @@ overall_processing_time = 0
 
 
 data_directory = "./data/"
+
+if not os.path.exists(data_directory):
+    os.mkdir(data_directory)
 
 def start_camera():
     global is_streaming

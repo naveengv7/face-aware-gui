@@ -52,6 +52,9 @@ overall_processing_time = 0
 
 data_directory = "./data/"
 
+if not os.path.exists(data_directory):
+    os.mkdir(data_directory)
+
 
 # Resizes a image and maintains aspect ratio
 def maintain_aspect_ratio_resize(image, width=None, height=None, inter=cv2.INTER_AREA):

@@ -14,6 +14,10 @@ from encrypt_aes import encrypt,add_metadata
 #     os.remove(os.path.join(dir, f))
 # only for test
 
+os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
+os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
+os.system("onboard")
+
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
 
@@ -51,6 +55,9 @@ capture_count=0
 overall_processing_time = 0
 
 data_directory = "./data/"
+
+if not os.path.exists(data_directory):
+    os.mkdir(data_directory)
 
 
 # Resizes a image and maintains aspect ratio
@@ -225,9 +232,10 @@ def start_camera_capture():
 
     if cap is None:
         #cap = cv2.VideoCapture(2)
-        cap = cv2.VideoCapture(CAMERA_PORT)
-        #cap.set(CAMERA_PROP_WIDTH, IMAGEWIDTH)
-        #cap.set(CAMERA_PROP_HEIGHT, IMAGEHEIGHT)
+        #cap = cv2.VideoCapture(CAMERA_PORT)
+        #cap = cv2.VideoCapture("v4l2src num-buffers=3000 ! video/x-raw,format=UYVY,width=1280,height=720,framerate=30/1 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+        cap = cv2.VideoCapture("v4l2src ! video/x-raw,format=UYVY,width=1920,height=1080 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+
         scan() # start the capture loop
     else:
         print('capture already started')
@@ -335,8 +343,9 @@ camera_panel = Label(camera_frame,bg='black')
 camera_panel.pack()
 #camera frame end
 
-frameCnt = 152
-frames = [PhotoImage(file='face1.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
+#frameCnt = 152
+#frames = [PhotoImage(file='face1.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
+frames = []
 
 def update(ind):
     frame = frames[ind]
@@ -348,7 +357,7 @@ def update(ind):
 
 label = Label(root,bg='#000000')
 label.pack()
-root.after(0, update, 0)
+#root.after(0, update, 0)
 
 #root.iconbitmap('/home/baset/Activity/clarkson/gui/final/icon.ico')
 root.iconphoto(False, PhotoImage(file='asset/icon.png'))

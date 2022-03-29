@@ -55,6 +55,9 @@ overall_processing_time = 0
 
 data_directory = "./data/"
 
+if not os.path.exists(data_directory):
+    os.mkdir(data_directory)
+
 def start_camera():
     global is_streaming
     create_folder_for_subject()
