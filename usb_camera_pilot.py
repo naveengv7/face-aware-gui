@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk,ImageDraw
 import cv2
-import os,time
+import os,time,sys
 from datetime import datetime
 from check_image_quality import check_image_quality,crop_and_save_image
 from dlib import get_frontal_face_detector,shape_predictor
@@ -84,8 +84,8 @@ def create_folder_for_subject():
     n = sub_name_var.get()
 
     subject_directory = data_directory+n+'/'
-    subject_directory_before_click = subject_directory+'/before/'
-    subject_directory_after_click = subject_directory+'/after/'
+    subject_directory_before_click = subject_directory+'before/'
+    subject_directory_after_click = subject_directory+'after/'
 
     if not os.path.exists(data_directory):
         os.mkdir(data_directory)
@@ -192,12 +192,15 @@ def scan():
         res,msg = check_image_quality(check_img,image_name,detector,predictor)
 
         if res is True:
+            
+            crop_and_save_image(orginal_img,subject_directory_after_click+image_name,detector,predictor)
+
             image_list.append(img)
             original_image_list.append(orginal_img)
             image_name_list.append(image_name)
             capture_count= capture_count + 1
             message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
-            crop_and_save_image(orginal_img,subject_directory_after_click+image_name,detector,predictor)
+                       
         else:
             message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 4",bg="red")
             cv2.imwrite(subject_directory_before_click+image_name,orginal_img)
@@ -236,7 +239,13 @@ def start_camera_capture():
 
 
     if cap is None:
-        cap = cv2.VideoCapture(CAMERA_PORT)
+        #cap = cv2.VideoCapture(2)
+        if len(sys.argv) > 1 and sys.argv[1] == 'c':
+            cap = cv2.VideoCapture(CAMERA_PORT)
+        else:
+            #cap = cv2.VideoCapture("v4l2src num-buffers=3000 ! video/x-raw,format=UYVY,width=1280,height=720,framerate=30/1 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+            cap = cv2.VideoCapture("v4l2src ! video/x-raw,format=UYVY,width=1920,height=1080 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+
    
         scan() # start the capture loop
     else:

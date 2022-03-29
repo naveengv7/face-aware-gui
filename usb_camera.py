@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk,ImageDraw
 import cv2
-import os,time
+import os,time,sys
 from datetime import datetime
 from check_image_quality import check_image_quality,crop_and_save_image
 from dlib import get_frontal_face_detector,shape_predictor
@@ -232,9 +232,11 @@ def start_camera_capture():
 
     if cap is None:
         #cap = cv2.VideoCapture(2)
-        #cap = cv2.VideoCapture(CAMERA_PORT)
-        #cap = cv2.VideoCapture("v4l2src num-buffers=3000 ! video/x-raw,format=UYVY,width=1280,height=720,framerate=30/1 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
-        cap = cv2.VideoCapture("v4l2src ! video/x-raw,format=UYVY,width=1920,height=1080 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+        if len(sys.argv) > 1 and sys.argv[1] == 'c':
+            cap = cv2.VideoCapture(CAMERA_PORT)
+        else:
+            #cap = cv2.VideoCapture("v4l2src num-buffers=3000 ! video/x-raw,format=UYVY,width=1280,height=720,framerate=30/1 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+            cap = cv2.VideoCapture("v4l2src ! video/x-raw,format=UYVY,width=1920,height=1080 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
 
         scan() # start the capture loop
     else:
@@ -343,7 +345,7 @@ camera_panel = Label(camera_frame,bg='black')
 camera_panel.pack()
 #camera frame end
 
-#frameCnt = 152
+frameCnt = 152
 #frames = [PhotoImage(file='face1.gif',format = 'gif -index %i' %(i)) for i in range(frameCnt)]
 frames = []
 

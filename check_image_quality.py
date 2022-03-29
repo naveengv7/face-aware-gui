@@ -278,11 +278,11 @@ def crop_square(img, size, interpolation=cv2.INTER_AREA):
     resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
     return resized
 
-def crop_square_by_nose(img, size,x,y, interpolation=cv2.INTER_AREA):
+def crop_square_by_nose(img,size,x,y):
     h, w = img.shape[:2]
 
-    #h=w/2
-    #w=w/2
+    h=w/2
+    w=w/2
 
     up= int(.35*h)
     down = int(.65*h)
@@ -313,8 +313,8 @@ def crop_and_save_image(image,image_name,detector,predictor):
         x = nose[0][0]
         y = nose[0][1]
 
-        crop_imag = crop_square_by_nose(image,1200,x,y)
-        cv2.imwrite(image_name,crop_imag)
+        crop_image = crop_square_by_nose(image,1200,x,y)
+        cv2.imwrite(image_name,crop_image)
         
 
 

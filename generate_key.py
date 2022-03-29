@@ -27,8 +27,8 @@ import os
 key = os.urandom(32)
 iv = os.urandom(16)
 
-with open('enc_key.key', "wb") as mykey:
+with open('keys/enc_key.key', "wb") as mykey:
     mykey.write(key)
 
-with open('enc_iv.iv', "wb") as myiv:
+with open('keys/enc_iv.iv', "wb") as myiv:
     myiv.write(iv)

@@ -3,7 +3,7 @@ from tkinter import messagebox
 from tkinter.tix import Tree
 from PIL import Image, ImageTk
 import cv2
-import os,time
+import os,time,sys
 from dlib import get_frontal_face_detector,shape_predictor
 from datetime import datetime
 from check_image_quality import check_image_quality
@@ -103,8 +103,8 @@ def create_folder_for_subject():
     n = sub_name_var.get()
 
     subject_directory = data_directory+n+'/'
-    subject_directory_before_click = subject_directory+'/before/'
-    subject_directory_after_click = subject_directory+'/after/'
+    subject_directory_before_click = subject_directory+'before/'
+    subject_directory_after_click = subject_directory+'after/'
 
     if not os.path.exists(data_directory):
         os.mkdir(data_directory)
@@ -239,9 +239,12 @@ def start_camera_capture(button_clk=False):
 
     if cap is None:
         #cap = cv2.VideoCapture(2)
-        cap = cv2.VideoCapture(CAMERA_PORT)
-        #cap.set(CAMERA_PROP_WIDTH, IMAGEWIDTH)
-        #cap.set(CAMERA_PROP_HEIGHT, IMAGEHEIGHT)
+        if len(sys.argv) > 1 and sys.argv[1] == 'c':
+            cap = cv2.VideoCapture(CAMERA_PORT)
+        else:
+            #cap = cv2.VideoCapture("v4l2src num-buffers=3000 ! video/x-raw,format=UYVY,width=1280,height=720,framerate=30/1 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+            cap = cv2.VideoCapture("v4l2src ! video/x-raw,format=UYVY,width=1920,height=1080 ! videoconvert ! video/x-raw,format=BGR ! appsink  ")
+
         
     else:
         print('capture already started')

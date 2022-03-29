@@ -10,11 +10,11 @@ def encrypt(file_path):
     #add_metadata(file_path)
 
     # opening the key
-    with open('enc_key.key', 'rb') as filekey:
+    with open('keys/enc_key.key', 'rb') as filekey:
         key = filekey.read()
 
     # opening the iv
-    with open('enc_iv.iv', 'rb') as fileiv:
+    with open('keys/enc_iv.iv', 'rb') as fileiv:
         iv = fileiv.read()
 
     # opening the original file to encrypt
@@ -31,11 +31,11 @@ def encrypt(file_path):
 
 def decrypt(file_path):
     # opening the key
-    with open('enc_key.key', 'rb') as filekey:
+    with open('keys/enc_key.key', 'rb') as filekey:
         key = filekey.read()
 
     # opening the iv
-    with open('enc_iv.iv', 'rb') as fileiv:
+    with open('keys/enc_iv.iv', 'rb') as fileiv:
         iv = fileiv.read()
 
     # opening the encrypted file
