@@ -8,7 +8,12 @@ from check_image_quality import check_image_quality,crop_and_save_image
 from dlib import get_frontal_face_detector,shape_predictor
 from encrypt_aes import encrypt,add_metadata
 
-
+try:
+    os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
+    os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
+    os.system("onboard")
+except:
+    print("could not run")
 
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
@@ -80,7 +85,7 @@ def create_folder_for_subject():
     if check_input_field() is False:
         return False
         
-    global subject_directory_before_click,subject_directory_after_click,data_directory
+    global subject_directory_before_click,subject_directory_after_click,data_directory,subject_directory
     n = sub_name_var.get()
 
     subject_directory = data_directory+n+'/'
@@ -115,15 +120,24 @@ def remove_cameraframe_child():
 
 # save image on click image
 def click_on_image(img_index):
-    print("image name saved:",image_name_list[int(img_index)])
+    global subject_directory_after_click
+    for img_index in range(0,50):
+        try:
+            crop_and_save_image(original_image_list[int(img_index)],subject_directory_after_click+image_name_list[int(img_index)],detector,predictor)
+            message_label.config(text="Image Saved: "+str(img_index+1)+" out of 50",bg="green")
+        except:
+            message_label.config(text="Image Could Not Saved: "+str(img_index+1)+" out of 50",bg="red")
 
-    crop_and_save_image(original_image_list[int(img_index)],subject_directory+image_name_list[int(img_index)],detector,predictor)
+    #print("image name saved:",image_name_list[int(img_index)])
+
+    #crop_and_save_image(original_image_list[int(img_index)],subject_directory+image_name_list[int(img_index)],detector,predictor)
 
     #cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
-    add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
-    encrypt(subject_directory+image_name_list[int(img_index)])
+    #add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
+    #encrypt(subject_directory+image_name_list[int(img_index)])
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
+
     messagebox.showinfo("Image Saved", "Thank You, Image Saved")
     remove_cameraframe_child()
 
@@ -193,16 +207,16 @@ def scan():
 
         if res is True:
             
-            crop_and_save_image(orginal_img,subject_directory_after_click+image_name,detector,predictor)
+            #crop_and_save_image(orginal_img,subject_directory_after_click+image_name,detector,predictor)
 
             image_list.append(img)
             original_image_list.append(orginal_img)
             image_name_list.append(image_name)
             capture_count= capture_count + 1
-            message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 4",bg="green")
+            message_label.config(text="Look at the camera please, captured: "+str(capture_count)+" out of 50",bg="green")
                        
         else:
-            message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 4",bg="red")
+            message_label.config(text=msg+' \ncaptured '+str(capture_count)+" out of 50",bg="red")
             cv2.imwrite(subject_directory_before_click+image_name,orginal_img)
             
         print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)

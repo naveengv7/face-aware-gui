@@ -13,6 +13,13 @@ from dlib import get_frontal_face_detector,shape_predictor
 #     os.remove(os.path.join(dir, f))
 # only for test
 
+try:
+    os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
+    os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
+    os.system("onboard")
+except:
+    print("could not run")
+
 detector = get_frontal_face_detector()
 #predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
 predictor = shape_predictor('shape_files/02_03_22_FACE_AWARE_41.dat')
