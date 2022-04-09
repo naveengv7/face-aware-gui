@@ -284,8 +284,8 @@ def crop_square_by_nose(img,size,x,y):
     h=w/2
     w=w/2
 
-    up= int(.35*h)
-    down = int(.65*h)
+    up= int(.40*h)
+    down = int(.60*h)
 
     left = int(w/2)
     right = int(w/2)
@@ -300,13 +300,13 @@ def crop_and_save_image(image,image_name,detector,predictor):
     (jStart,jEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["jaw"]
     (nStart,nEnd)   = face_utils.FACIAL_LANDMARKS_IDXS["nose"]
 
-    jaw = None
+    #jaw = None
     rects = detector(image, 0)
     for rect in rects:
         shape = predictor(image, rect)
         shape = face_utils.shape_to_np(shape)
 
-        jaw = shape[jStart:jEnd]
+        #jaw = shape[jStart:jEnd]
         nose = shape[nStart:nEnd]
 
         print("nose position",nose[0][0],nose[0][1])

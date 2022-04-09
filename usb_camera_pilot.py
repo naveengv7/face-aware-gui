@@ -129,9 +129,7 @@ def click_on_image(img_index):
             message_label.config(text="Image Could Not Saved: "+str(img_index+1)+" out of 50",bg="red")
 
     #print("image name saved:",image_name_list[int(img_index)])
-
     #crop_and_save_image(original_image_list[int(img_index)],subject_directory+image_name_list[int(img_index)],detector,predictor)
-
     #cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
     #add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
     #encrypt(subject_directory+image_name_list[int(img_index)])
@@ -153,7 +151,23 @@ def draw_box(image):
 
 
     color = (255, 0, 0)
-    return cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 4)
+    image =  cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 4)
+
+ 
+    # start_x = int(width/2)
+    # start_y = int(height/2)
+
+    # end_x = int(width/2)
+    # end_y = int(height/2)
+    
+    # color = (255, 0, 0)
+    # image = cv2.rectangle(image,(start_x,start_y), (end_x,end_y), color, 4)
+
+    #image = cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), thickness=2)
+
+    #image = cv2.line(image, (width/2, 0), (0, height), (0, 255, 0), thickness=2)
+
+    return image
 
 
 
@@ -206,9 +220,7 @@ def scan():
         res,msg = check_image_quality(check_img,image_name,detector,predictor)
 
         if res is True:
-            
             #crop_and_save_image(orginal_img,subject_directory_after_click+image_name,detector,predictor)
-
             image_list.append(img)
             original_image_list.append(orginal_img)
             image_name_list.append(image_name)
