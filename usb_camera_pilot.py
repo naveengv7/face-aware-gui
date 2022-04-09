@@ -121,11 +121,13 @@ def remove_cameraframe_child():
 # save image on click image
 def click_on_image(img_index):
     global subject_directory_after_click
+    er = 0
     for img_index in range(0,50):
         try:
             crop_and_save_image(original_image_list[int(img_index)],subject_directory_after_click+image_name_list[int(img_index)],detector,predictor)
             message_label.config(text="Image Saved: "+str(img_index+1)+" out of 50",bg="green")
         except:
+            er = er + 1 
             message_label.config(text="Image Could Not Saved: "+str(img_index+1)+" out of 50",bg="red")
 
     #print("image name saved:",image_name_list[int(img_index)])
@@ -136,7 +138,7 @@ def click_on_image(img_index):
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
 
-    messagebox.showinfo("Image Saved", "Thank You, Image Saved")
+    messagebox.showinfo("Image Saved, exception:"+str(er), "Thank You, Image Saved")
     remove_cameraframe_child()
 
 

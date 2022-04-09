@@ -123,16 +123,20 @@ def remove_cameraframe_child():
 
 # save image on click image
 def click_on_image(img_index):
-    print("image name saved:",image_name_list[int(img_index)])
+    try:
+        print("image name saved:",image_name_list[int(img_index)])
 
-    crop_and_save_image(original_image_list[int(img_index)],subject_directory+image_name_list[int(img_index)],detector,predictor)
+        crop_and_save_image(original_image_list[int(img_index)],subject_directory+image_name_list[int(img_index)],detector,predictor)
 
-    #cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
-    add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
-    encrypt(subject_directory+image_name_list[int(img_index)])
-    #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
-    #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
-    messagebox.showinfo("Image Saved", "Thank You, Image Saved")
+        #cv2.imwrite(subject_directory+image_name_list[int(img_index)],original_image_list[int(img_index)])
+        add_metadata(subject_directory+image_name_list[int(img_index)],image_name_list[int(img_index)])
+        encrypt(subject_directory+image_name_list[int(img_index)])
+        #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
+        #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
+        messagebox.showinfo("Image Saved", "Thank You, Image Saved")
+    except:
+        messagebox.showinfo("Image Could Not Saved", "Thank You, Image Saved")
+
     remove_cameraframe_child()
 
 
