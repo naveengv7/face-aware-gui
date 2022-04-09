@@ -453,9 +453,9 @@ def check_image_quality(image,image_name,detector,predictor):
             print("--Not acceptable, Brightness issue")  
             return False,"Not acceptable, Brightness issue"
 
-        # elif is_background_white == 0:
-        #     print("--Not acceptable, Background Color not white")
-        #     return False,"Not acceptable, Background Color not white"
+        elif is_background_white == 0:
+            print("--Not acceptable, Background Color not white")
+            return False,"Not acceptable, Background Color not white"
 
         elif is_glass == 1:
             print("--Not acceptable, Glass detected")
