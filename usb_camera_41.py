@@ -16,7 +16,7 @@ from dlib import get_frontal_face_detector,shape_predictor
 try:
     os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
     os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
-    os.system("onboard")
+    os.system("onboard &")
 except:
     print("could not run")
 

@@ -17,7 +17,7 @@ from encrypt_aes import encrypt,add_metadata
 try:
     os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
     os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
-    os.system("onboard")
+    os.system("onboard &")
 except:
     print("could not run")
     
@@ -135,7 +135,7 @@ def click_on_image(img_index):
         #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
         messagebox.showinfo("Image Saved", "Thank You, Image Saved")
     except:
-        messagebox.showinfo("Image Could Not Saved", "Thank You, Image Saved")
+        messagebox.showinfo("Image Could Not Saved", "Thank You")
 
     remove_cameraframe_child()
 

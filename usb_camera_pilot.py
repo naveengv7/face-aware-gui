@@ -11,7 +11,7 @@ from encrypt_aes import encrypt,add_metadata
 try:
     os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
     os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
-    os.system("onboard")
+    os.system("onboard &")
 except:
     print("could not run")
 
@@ -122,6 +122,7 @@ def remove_cameraframe_child():
 def click_on_image(img_index):
     global subject_directory_after_click
     er = 0
+    message_label.config(text="Saving images, Please wait.....",bg="green")
     for img_index in range(0,50):
         try:
             crop_and_save_image(original_image_list[int(img_index)],subject_directory_after_click+image_name_list[int(img_index)],detector,predictor)

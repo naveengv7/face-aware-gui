@@ -18,7 +18,7 @@ from encrypt_aes import encrypt,add_metadata
 try:
     os.system("v4l2-ctl  --set-ctrl=exposure_auto=2")
     os.system("v4l2-ctl  --set-ctrl=exposure_absolute=500")
-    os.system("onboard")
+    os.system("onboard &")
 except:
     print("could not run")
 
