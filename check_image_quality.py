@@ -435,20 +435,20 @@ def check_image_quality(image,image_name,detector,predictor):
             print("--No face detected")
             return False,"No face detected"
         elif nose_position is False: 
-            print("--Not acceptable, Not in center")
-            return False,"Not acceptable, Not in center"
+            print("--Not acceptable Put your face inside blue box")
+            return False,"Put your face inside blue box"
         elif blur_value < 5: #blur (laplacian) check
             print("--Not acceptable, Image is blurry")
-            return False,"Not acceptable, Image is blurry"
+            return False,"Image is blurry"
         elif left_eye_distance_ratio > 6 or right_eye_distance_ratio > 6:
             print("--Not acceptable, Eye Closed") 
-            return False,"Not acceptable, Eye Closed"
+            return False,"Eye Closed"
         elif d_ratio > 1.2 or d_ratio < .9:
             print("--Not acceptable, looking away")
-            return False,"Not acceptable, looking away"
+            return False,"Looking away"
         elif jaw_angle > 10 or jaw_angle < -10:
             print("--Not acceptable for tilted")
-            return False,"Not acceptable for tilted"
+            return False,"Not acceptable for Tilted Head"
         elif brightness < 45 or brightness > 204:  # Based on histogram value
             print("--Not acceptable, Brightness issue")  
             return False,"Not acceptable, Brightness issue"
