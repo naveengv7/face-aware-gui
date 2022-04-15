@@ -264,7 +264,7 @@ def is_nose_is_in_middle(img,x,y):
     y_percent = y*100/h
 
     print("Nose position in percent %",x_percent,y_percent)
-    if (x_percent > 45 and x_percent < 55) and (y_percent > 32 and y_percent < 40):
+    if (x_percent > 42 and x_percent < 58) and (y_percent > 32 and y_percent < 40):
         return True
     else:
         return False

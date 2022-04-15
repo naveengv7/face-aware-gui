@@ -160,7 +160,7 @@ def scan():
     image_name = now.strftime("%Y_%m_%d_%H_%M_%S_%f.jpg")
 
     if ret:
-
+        img = cv2.flip(img,1)
         orginal_img = img.copy()
         check_img = img.copy()
         

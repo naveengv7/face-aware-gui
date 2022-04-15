@@ -200,7 +200,7 @@ def scan():
     # )
 
     if ret:
-
+        img = cv2.flip(img,1)
         orginal_img = img.copy()
         check_img = img.copy()
         
