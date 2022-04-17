@@ -125,8 +125,8 @@ def click_on_image(img_index):
     message_label.config(text="Saving images, Please wait.....",bg="green")
     for img_index in range(0,50):
         try:
-            crop_and_save_image(original_image_list[int(img_index)],subject_directory_after_click+image_name_list[int(img_index)],detector,predictor)
-            #cv2.imwrite(subject_directory_after_click+image_name_list[int(img_index)],original_image_list[int(img_index)])
+            #crop_and_save_image(original_image_list[int(img_index)],subject_directory_after_click+image_name_list[int(img_index)],detector,predictor)
+            cv2.imwrite(subject_directory_after_click+image_name_list[int(img_index)],original_image_list[int(img_index)])
             message_label.config(text="Image Saved: "+str(img_index+1)+" out of 50",bg="green")
         except:
             er = er + 1 
