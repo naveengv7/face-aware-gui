@@ -118,8 +118,27 @@ def remove_cameraframe_child():
 
 
 
+def open_popup(img):
+    top= Toplevel(root)
+    top.geometry("750x750")
+    top.title("Image Saved")
+
+    #for display and grid
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
+    img = Image.fromarray(img)
+    #img = img.resize((150,150)) # new width & height
+    img = ImageTk.PhotoImage(image=img)
+    #for display and grid
+
+    #display frame on gui 
+    label= Label(top, image= img)
+    label.image= img
+    label.pack()
+
+    return 1
+
 # save image on click image
-def click_on_image(img_index):
+def click_on_image(image_click_index):
     global subject_directory_after_click
     er = 0
     message_label.config(text="Saving images, Please wait.....",bg="green")
@@ -140,7 +159,8 @@ def click_on_image(img_index):
     #image = maintain_aspect_ratio_resize(image, width=IMAGEWIDTH)
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
 
-    messagebox.showinfo("Image Saved, exception:"+str(er), "Thank You, Image Saved")
+    open_popup(original_image_list[int(image_click_index)])
+    #messagebox.showinfo("Image Saved, exception:"+str(er), "Thank You, Image Saved")
     remove_cameraframe_child()
 
 
