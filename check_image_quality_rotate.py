@@ -281,14 +281,16 @@ def crop_square(img, size, interpolation=cv2.INTER_AREA):
 def crop_square_by_nose(img,size,x,y):
     h, w = img.shape[:2]
 
-    h=1200/2
-    w=1200/2
+    #h=1200/2
+    #w=1200/2
+    h = 1200
+    w = 1200
 
     up= int(.40*h)
     down = int(.60*h)
 
-    left = int(1200/2)
-    right = int(1200/2)
+    left = int(h/2)
+    right = int(w/2)
     
     crop_img = img[int(y-up):int(y+down), int(x-left):int(x+right)]
 
