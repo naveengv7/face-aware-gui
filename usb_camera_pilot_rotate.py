@@ -19,7 +19,7 @@ detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_files/shape_predictor_68_face_landmarks.dat")
 
 
-CAMERA_PORT = 2
+CAMERA_PORT = 0
 CAMERA_PROP_WIDTH = 3
 CAMERA_PROP_HEIGHT = 4
 
