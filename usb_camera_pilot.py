@@ -129,7 +129,7 @@ def open_popup(img):
     
     #img = img.resize((320,320)) # new width & height
     #img = img.resize((320,320), refcheck=True)
-    img  = crop_square(img,750)
+    img  = crop_square(img,400)
 
     #for display and grid
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
