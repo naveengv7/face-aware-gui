@@ -4,7 +4,7 @@ from PIL import Image, ImageTk,ImageDraw
 import cv2
 import os,time,sys
 from datetime import datetime
-from check_image_quality import check_image_quality,crop_and_save_image
+from check_image_quality import check_image_quality,crop_and_save_image,crop_square
 from dlib import get_frontal_face_detector,shape_predictor
 from encrypt_aes import encrypt,add_metadata
 
@@ -123,15 +123,22 @@ def open_popup(img):
     top.geometry("750x750")
     top.title("Image Saved")
 
+    # h, w = img.shape[:2]
+    #h=int(h/2)
+    #w=int(w/2)
+    
+    #img = img.resize((320,320)) # new width & height
+    #img = img.resize((320,320), refcheck=True)
+    img  = crop_square(img,750)
+
     #for display and grid
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
     img = Image.fromarray(img)
-    #img = img.resize((150,150)) # new width & height
     img = ImageTk.PhotoImage(image=img)
     #for display and grid
 
     #display frame on gui 
-    label= Label(top, image= img)
+    label= Label(top, image=img)
     label.image= img
     label.pack()
 
@@ -160,6 +167,7 @@ def click_on_image(image_click_index):
     #cv2.imwrite(subject_directory+image_name,maintain_aspect_ratio_resize(original_image_list[int(img_index)],width=IMAGEWIDTH))
 
     open_popup(original_image_list[int(image_click_index)])
+ 
     #messagebox.showinfo("Image Saved, exception:"+str(er), "Thank You, Image Saved")
     remove_cameraframe_child()
 
