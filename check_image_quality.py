@@ -409,7 +409,7 @@ def check_image_quality(image,image_name,detector,predictor):
         print("right_eye_width_height_ratio",right_eye_distance_ratio)
 
         m_time = time.monotonic() 
-        mouth_distance_ratio = get_dist_ratio(shape[48],shape[54],shape[51],shape[57])
+        mouth_distance_ratio = get_dist_ratio(shape[48],shape[54],shape[62],shape[66])
         print("mouth_width_height_ratio",mouth_distance_ratio)
         print('#mouth_or_eye_distance_ration_time_seconds:: ', time.monotonic() - m_time)
 
@@ -449,9 +449,16 @@ def check_image_quality(image,image_name,detector,predictor):
         elif jaw_angle > 10 or jaw_angle < -10:
             print("--Not acceptable for tilted")
             return False,"Not acceptable for Tilted Head"
-        elif brightness < 45 or brightness > 204:  # Based on histogram value
-            print("--Not acceptable, Brightness issue")  
-            return False,"Not acceptable, Brightness issue"
+        elif brightness > 190:  # Based on histogram value
+            print("--Not acceptable, Brightness is high")  
+            return False,"Not acceptable, Brightness is high"
+        elif brightness < 170:  # Based on histogram value
+            print("--Not acceptable, Brightness is low")  
+            return False,"Not acceptable, Brightness is low"
+
+        elif mouth_distance_ratio < 12 or mouth_distance_ratio > 19: 
+            print("--Not acceptable, Mouth open")  
+            return False,"Not acceptable, Mouth open"
 
         # elif is_background_white == 0:
         #     print("--Not acceptable, Background Color not white")
