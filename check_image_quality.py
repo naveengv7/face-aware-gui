@@ -452,13 +452,13 @@ def check_image_quality(image,image_name,detector,predictor):
         elif brightness > 190:  # Based on histogram value
             print("--Not acceptable, Brightness is high")  
             return False,"Not acceptable, Brightness is high"
-        elif brightness < 170:  # Based on histogram value
+        elif brightness < 160:  # was 160 Based on histogram value
             print("--Not acceptable, Brightness is low")  
             return False,"Not acceptable, Brightness is low"
 
-        elif mouth_distance_ratio < 12 or mouth_distance_ratio > 19: 
-            print("--Not acceptable, Mouth open")  
-            return False,"Not acceptable, Mouth open"
+        # elif mouth_distance_ratio < 12 or mouth_distance_ratio > 19: 
+        #     print("--Not acceptable, Mouth open")  
+        #     return False,"Not acceptable, Mouth open"
 
         # elif is_background_white == 0:
         #     print("--Not acceptable, Background Color not white")
