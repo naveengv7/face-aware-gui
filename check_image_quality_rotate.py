@@ -316,9 +316,9 @@ def crop_and_save_image(image,image_name,detector,predictor):
         y = nose[0][1]
 
         crop_image = crop_square_by_nose(image,1200,x,y)
-        cv2.imwrite(image_name,crop_image)
+        #cv2.imwrite(image_name,crop_image)
+        cv2.imwrite(image_name,crop_image,[cv2.IMWRITE_JPEG_QUALITY, 100])
         
-
 
 
 
