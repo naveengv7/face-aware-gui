@@ -152,7 +152,7 @@ def click_on_image(image_click_index):
     for img_index in range(0,50):
         try:
             #crop_and_save_image(original_image_list[int(img_index)],subject_directory_after_click+image_name_list[int(img_index)],detector,predictor)
-            cv2.imwrite(subject_directory_after_click+image_name_list[int(img_index)],original_image_list[int(img_index)])
+            cv2.imwrite(subject_directory_after_click+image_name_list[int(img_index)],original_image_list[int(img_index)],[cv2.IMWRITE_JPEG_QUALITY, 100])
             message_label.config(text="Image Saved: "+str(img_index+1)+" out of 50",bg="green")
         except:
             er = er + 1 
@@ -261,7 +261,7 @@ def scan():
                        
         else:
             message_label.config(text=msg,bg="red")
-            cv2.imwrite(subject_directory_before_click+image_name,orginal_img)
+            cv2.imwrite(subject_directory_before_click+image_name,orginal_img,[cv2.IMWRITE_JPEG_QUALITY, 100])
             
         print('##per_image_quality_check_time_seconds:: ', time.monotonic() - start_time)
 
